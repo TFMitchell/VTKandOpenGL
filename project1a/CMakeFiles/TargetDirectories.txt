@@ -1,0 +1,3 @@
+C:/Users/Thomas/Desktop/project1a/CMakeFiles/project1A.dir
+C:/Users/Thomas/Desktop/project1a/CMakeFiles/ALL_BUILD.dir
+C:/Users/Thomas/Desktop/project1a/CMakeFiles/ZERO_CHECK.dir

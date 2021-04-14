@@ -1,0 +1,3 @@
+C:/Users/Thomas/Desktop/CIS-441/project1c/CMakeFiles/project1C.dir
+C:/Users/Thomas/Desktop/CIS-441/project1c/CMakeFiles/ALL_BUILD.dir
+C:/Users/Thomas/Desktop/CIS-441/project1c/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,1686 @@
+Triangle 0
+
+
+Splitting this triangle: Triangle: (935.034, 252.664), (935.018, 253.537), (933.711, 253.346)
+Into left: Triangle: (933.711, 253.346), (935.018, 253.537), (935.018, 252.672)
+and right: Triangle: (935.034, 252.664), (935.018, 253.537), (935.018, 252.672)
+Rasterizing a left tri
+Scanlines are 934 to 935
+Working on scanline 934
+Y-intercepts are 253.388, 253.197
+Rows are 254 to 253
+Working on scanline 935
+Y-intercepts are 253.535, 252.681
+Rows are 253 to 253
+Depositing color from triangle 0 into column 935, row 253
+Working on a going right triangle
+The scanlines for this triangle are 936 to 935
+
+
+Triangle 1
+
+
+Splitting this triangle: Triangle: (933.708, 253.515), (933.711, 253.346), (935.018, 253.537)
+Into left: Triangle: (933.708, 253.515), (933.711, 253.346), (933.711, 253.515)
+and right: Triangle: (935.018, 253.537), (933.711, 253.346), (933.711, 253.515)
+Rasterizing a left tri
+Scanlines are 934 to 933
+Working on a going right triangle
+The scanlines for this triangle are 934 to 935
+Working on scanline 934
+Y-intercepts are 253.388, 253.52
+Rows are 254 to 253
+Working on scanline 935
+Y-intercepts are 253.535, 253.537
+Rows are 254 to 253
+
+
+Triangle 2
+
+
+Splitting this triangle: Triangle: (935.034, 252.664), (936.34, 252.905), (935.018, 253.537)
+Into left: Triangle: (935.018, 253.537), (935.034, 252.664), (935.034, 253.53)
+and right: Triangle: (936.34, 252.905), (935.034, 252.664), (935.034, 253.53)
+Rasterizing a left tri
+Scanlines are 936 to 935
+Working on a going right triangle
+The scanlines for this triangle are 936 to 936
+Working on scanline 936
+Y-intercepts are 252.842, 253.068
+Rows are 253 to 253
+Depositing color from triangle 2 into column 936, row 253
+
+
+Triangle 3
+
+
+Splitting this triangle: Triangle: (936.328, 253.56), (935.018, 253.537), (936.34, 252.905)
+Into left: Triangle: (935.018, 253.537), (936.328, 253.56), (936.328, 252.911)
+and right: Triangle: (936.34, 252.905), (936.328, 253.56), (936.328, 252.911)
+Rasterizing a left tri
+Scanlines are 936 to 936
+Working on scanline 936
+Y-intercepts are 253.555, 253.068
+Rows are 254 to 253
+Working on a going right triangle
+The scanlines for this triangle are 937 to 936
+
+
+Triangle 4
+
+
+Splitting this triangle: Triangle: (931.088, 253.469), (932.398, 253.492), (931.066, 254.779)
+Into left: Triangle: (931.066, 254.779), (931.088, 253.469), (931.088, 254.757)
+and right: Triangle: (932.398, 253.492), (931.088, 253.469), (931.088, 254.757)
+Rasterizing a left tri
+Scanlines are 932 to 931
+Working on a going right triangle
+The scanlines for this triangle are 932 to 932
+Working on scanline 932
+Y-intercepts are 253.485, 253.876
+Rows are 254 to 253
+
+
+Triangle 5
+
+
+Splitting this triangle: Triangle: (932.376, 254.802), (931.066, 254.779), (932.398, 253.492)
+Into left: Triangle: (931.066, 254.779), (932.376, 254.802), (932.376, 253.514)
+and right: Triangle: (932.398, 253.492), (932.376, 254.802), (932.376, 253.514)
+Rasterizing a left tri
+Scanlines are 932 to 932
+Working on scanline 932
+Y-intercepts are 254.795, 253.876
+Rows are 254 to 254
+Depositing color from triangle 5 into column 932, row 254
+Working on a going right triangle
+The scanlines for this triangle are 933 to 932
+
+
+Triangle 6
+
+
+Splitting this triangle: Triangle: (932.398, 253.492), (933.708, 253.515), (932.376, 254.802)
+Into left: Triangle: (932.376, 254.802), (932.398, 253.492), (932.398, 254.78)
+and right: Triangle: (933.708, 253.515), (932.398, 253.492), (932.398, 254.78)
+Rasterizing a left tri
+Scanlines are 933 to 932
+Working on a going right triangle
+The scanlines for this triangle are 933 to 933
+Working on scanline 933
+Y-intercepts are 253.502, 254.199
+Rows are 254 to 254
+Depositing color from triangle 6 into column 933, row 254
+
+
+Triangle 7
+
+
+Splitting this triangle: Triangle: (933.686, 254.825), (932.376, 254.802), (933.708, 253.515)
+Into left: Triangle: (932.376, 254.802), (933.686, 254.825), (933.686, 253.537)
+and right: Triangle: (933.708, 253.515), (933.686, 254.825), (933.686, 253.537)
+Rasterizing a left tri
+Scanlines are 933 to 933
+Working on scanline 933
+Y-intercepts are 254.813, 254.199
+Rows are 255 to 254
+Working on a going right triangle
+The scanlines for this triangle are 934 to 933
+
+
+Triangle 8
+
+
+Splitting this triangle: Triangle: (933.708, 253.515), (935.018, 253.537), (933.686, 254.825)
+Into left: Triangle: (933.686, 254.825), (933.708, 253.515), (933.708, 254.802)
+and right: Triangle: (935.018, 253.537), (933.708, 253.515), (933.708, 254.802)
+Rasterizing a left tri
+Scanlines are 934 to 933
+Working on a going right triangle
+The scanlines for this triangle are 934 to 935
+Working on scanline 934
+Y-intercepts are 253.52, 254.521
+Rows are 254 to 254
+Depositing color from triangle 8 into column 934, row 254
+Working on scanline 935
+Y-intercepts are 253.537, 253.555
+Rows are 254 to 253
+
+
+Triangle 9
+
+
+Splitting this triangle: Triangle: (934.996, 254.847), (933.686, 254.825), (935.018, 253.537)
+Into left: Triangle: (933.686, 254.825), (934.996, 254.847), (934.996, 253.56)
+and right: Triangle: (935.018, 253.537), (934.996, 254.847), (934.996, 253.56)
+Rasterizing a left tri
+Scanlines are 934 to 934
+Working on scanline 934
+Y-intercepts are 254.83, 254.521
+Rows are 255 to 254
+Working on a going right triangle
+The scanlines for this triangle are 935 to 935
+Working on scanline 935
+Y-intercepts are 254.592, 253.555
+Rows are 254 to 254
+Depositing color from triangle 9 into column 935, row 254
+
+
+Triangle 10
+
+
+Splitting this triangle: Triangle: (935.018, 253.537), (936.328, 253.56), (934.996, 254.847)
+Into left: Triangle: (934.996, 254.847), (935.018, 253.537), (935.018, 254.825)
+and right: Triangle: (936.328, 253.56), (935.018, 253.537), (935.018, 254.825)
+Rasterizing a left tri
+Scanlines are 935 to 935
+Working on scanline 935
+Y-intercepts are 254.592, 254.843
+Rows are 255 to 254
+Working on a going right triangle
+The scanlines for this triangle are 936 to 936
+Working on scanline 936
+Y-intercepts are 253.555, 253.878
+Rows are 254 to 253
+
+
+Triangle 11
+
+
+Splitting this triangle: Triangle: (936.306, 254.87), (934.996, 254.847), (936.328, 253.56)
+Into left: Triangle: (934.996, 254.847), (936.306, 254.87), (936.306, 253.582)
+and right: Triangle: (936.328, 253.56), (936.306, 254.87), (936.306, 253.582)
+Rasterizing a left tri
+Scanlines are 935 to 936
+Working on scanline 935
+Y-intercepts are 254.848, 254.843
+Rows are 255 to 254
+Working on scanline 936
+Y-intercepts are 254.865, 253.878
+Rows are 254 to 254
+Depositing color from triangle 11 into column 936, row 254
+Working on a going right triangle
+The scanlines for this triangle are 937 to 936
+
+
+Triangle 12
+
+
+Splitting this triangle: Triangle: (936.328, 253.56), (937.638, 253.583), (936.306, 254.87)
+Into left: Triangle: (936.306, 254.87), (936.328, 253.56), (936.328, 254.848)
+and right: Triangle: (937.638, 253.583), (936.328, 253.56), (936.328, 254.848)
+Rasterizing a left tri
+Scanlines are 937 to 936
+Working on a going right triangle
+The scanlines for this triangle are 937 to 937
+Working on scanline 937
+Y-intercepts are 253.572, 254.2
+Rows are 254 to 254
+Depositing color from triangle 12 into column 937, row 254
+
+
+Triangle 13
+
+
+Splitting this triangle: Triangle: (937.616, 254.893), (936.306, 254.87), (937.638, 253.583)
+Into left: Triangle: (936.306, 254.87), (937.616, 254.893), (937.616, 253.605)
+and right: Triangle: (937.638, 253.583), (937.616, 254.893), (937.616, 253.605)
+Rasterizing a left tri
+Scanlines are 937 to 937
+Working on scanline 937
+Y-intercepts are 254.882, 254.2
+Rows are 255 to 254
+Working on a going right triangle
+The scanlines for this triangle are 938 to 937
+
+
+Triangle 14
+
+
+Splitting this triangle: Triangle: (919.272, 254.792), (919.253, 255.883), (917.945, 255.72)
+Into left: Triangle: (917.945, 255.72), (919.253, 255.883), (919.253, 254.805)
+and right: Triangle: (919.272, 254.792), (919.253, 255.883), (919.253, 254.805)
+Rasterizing a left tri
+Scanlines are 918 to 919
+Working on scanline 918
+Y-intercepts are 255.727, 255.682
+Rows are 256 to 255
+Working on scanline 919
+Y-intercepts are 255.852, 254.982
+Rows are 255 to 255
+Depositing color from triangle 14 into column 919, row 255
+Working on a going right triangle
+The scanlines for this triangle are 920 to 919
+
+
+Triangle 15
+
+
+Splitting this triangle: Triangle: (917.943, 255.86), (917.945, 255.72), (919.253, 255.883)
+Into left: Triangle: (917.943, 255.86), (917.945, 255.72), (917.945, 255.86)
+and right: Triangle: (919.253, 255.883), (917.945, 255.72), (917.945, 255.86)
+Rasterizing a left tri
+Scanlines are 918 to 917
+Working on a going right triangle
+The scanlines for this triangle are 918 to 919
+Working on scanline 918
+Y-intercepts are 255.727, 255.861
+Rows are 256 to 255
+Working on scanline 919
+Y-intercepts are 255.852, 255.879
+Rows are 256 to 255
+
+
+Triangle 16
+
+
+Splitting this triangle: Triangle: (919.272, 254.792), (920.582, 254.815), (919.253, 255.883)
+Into left: Triangle: (919.253, 255.883), (919.272, 254.792), (919.272, 255.868)
+and right: Triangle: (920.582, 254.815), (919.272, 254.792), (919.272, 255.868)
+Rasterizing a left tri
+Scanlines are 920 to 919
+Working on a going right triangle
+The scanlines for this triangle are 920 to 920
+Working on scanline 920
+Y-intercepts are 254.805, 255.282
+Rows are 255 to 255
+Depositing color from triangle 16 into column 920, row 255
+
+
+Triangle 17
+
+
+Splitting this triangle: Triangle: (920.563, 255.906), (919.253, 255.883), (920.582, 254.815)
+Into left: Triangle: (919.253, 255.883), (920.563, 255.906), (920.563, 254.83)
+and right: Triangle: (920.582, 254.815), (920.563, 255.906), (920.563, 254.83)
+Rasterizing a left tri
+Scanlines are 920 to 920
+Working on scanline 920
+Y-intercepts are 255.896, 255.282
+Rows are 256 to 255
+Working on a going right triangle
+The scanlines for this triangle are 921 to 920
+
+
+Triangle 18
+
+
+Splitting this triangle: Triangle: (921.896, 254.619), (921.873, 255.929), (920.582, 254.815)
+Into left: Triangle: (920.582, 254.815), (921.873, 255.929), (921.873, 254.622)
+and right: Triangle: (921.896, 254.619), (921.873, 255.929), (921.873, 254.622)
+Rasterizing a left tri
+Scanlines are 921 to 921
+Working on scanline 921
+Y-intercepts are 255.176, 254.752
+Rows are 255 to 255
+Depositing color from triangle 18 into column 921, row 255
+Working on a going right triangle
+The scanlines for this triangle are 922 to 921
+
+
+Triangle 19
+
+
+Splitting this triangle: Triangle: (920.563, 255.906), (920.582, 254.815), (921.873, 255.929)
+Into left: Triangle: (920.563, 255.906), (920.582, 254.815), (920.582, 255.906)
+and right: Triangle: (921.873, 255.929), (920.582, 254.815), (920.582, 255.906)
+Rasterizing a left tri
+Scanlines are 921 to 920
+Working on a going right triangle
+The scanlines for this triangle are 921 to 921
+Working on scanline 921
+Y-intercepts are 255.176, 255.914
+Rows are 256 to 255
+
+
+Triangle 20
+
+
+Splitting this triangle: Triangle: (921.896, 254.619), (923.206, 254.642), (921.873, 255.929)
+Into left: Triangle: (921.873, 255.929), (921.896, 254.619), (921.896, 255.907)
+and right: Triangle: (923.206, 254.642), (921.896, 254.619), (921.896, 255.907)
+Rasterizing a left tri
+Scanlines are 922 to 921
+Working on a going right triangle
+The scanlines for this triangle are 922 to 923
+Working on scanline 922
+Y-intercepts are 254.621, 255.806
+Rows are 255 to 255
+Depositing color from triangle 20 into column 922, row 255
+Working on scanline 923
+Y-intercepts are 254.638, 254.84
+Rows are 255 to 254
+
+
+Triangle 21
+
+
+Splitting this triangle: Triangle: (923.206, 254.642), (924.516, 254.665), (923.183, 255.952)
+Into left: Triangle: (923.183, 255.952), (923.206, 254.642), (923.206, 255.93)
+and right: Triangle: (924.516, 254.665), (923.206, 254.642), (923.206, 255.93)
+Rasterizing a left tri
+Scanlines are 924 to 923
+Working on a going right triangle
+The scanlines for this triangle are 924 to 924
+Working on scanline 924
+Y-intercepts are 254.656, 255.162
+Rows are 255 to 255
+Depositing color from triangle 21 into column 924, row 255
+
+
+Triangle 22
+
+
+Splitting this triangle: Triangle: (924.493, 255.975), (923.183, 255.952), (924.516, 254.665)
+Into left: Triangle: (923.183, 255.952), (924.493, 255.975), (924.493, 254.687)
+and right: Triangle: (924.516, 254.665), (924.493, 255.975), (924.493, 254.687)
+Rasterizing a left tri
+Scanlines are 924 to 924
+Working on scanline 924
+Y-intercepts are 255.966, 255.162
+Rows are 256 to 255
+Working on a going right triangle
+The scanlines for this triangle are 925 to 924
+
+
+Triangle 23
+
+
+Splitting this triangle: Triangle: (924.516, 254.665), (925.826, 254.687), (924.493, 255.975)
+Into left: Triangle: (924.493, 255.975), (924.516, 254.665), (924.516, 255.952)
+and right: Triangle: (925.826, 254.687), (924.516, 254.665), (924.516, 255.952)
+Rasterizing a left tri
+Scanlines are 925 to 924
+Working on a going right triangle
+The scanlines for this triangle are 925 to 925
+Working on scanline 925
+Y-intercepts are 254.673, 255.485
+Rows are 255 to 255
+Depositing color from triangle 23 into column 925, row 255
+
+
+Triangle 24
+
+
+Splitting this triangle: Triangle: (925.803, 255.997), (924.493, 255.975), (925.826, 254.687)
+Into left: Triangle: (924.493, 255.975), (925.803, 255.997), (925.803, 254.709)
+and right: Triangle: (925.826, 254.687), (925.803, 255.997), (925.803, 254.709)
+Rasterizing a left tri
+Scanlines are 925 to 925
+Working on scanline 925
+Y-intercepts are 255.983, 255.485
+Rows are 256 to 255
+Working on a going right triangle
+The scanlines for this triangle are 926 to 925
+
+
+Triangle 25
+
+
+Splitting this triangle: Triangle: (925.826, 254.687), (927.136, 254.71), (925.803, 255.997)
+Into left: Triangle: (925.803, 255.997), (925.826, 254.687), (925.826, 255.975)
+and right: Triangle: (927.136, 254.71), (925.826, 254.687), (925.826, 255.975)
+Rasterizing a left tri
+Scanlines are 926 to 925
+Working on a going right triangle
+The scanlines for this triangle are 926 to 927
+Working on scanline 926
+Y-intercepts are 254.69, 255.807
+Rows are 255 to 255
+Depositing color from triangle 25 into column 926, row 255
+Working on scanline 927
+Y-intercepts are 254.708, 254.841
+Rows are 255 to 254
+
+
+Triangle 26
+
+
+Splitting this triangle: Triangle: (927.113, 256.02), (925.803, 255.997), (927.136, 254.71)
+Into left: Triangle: (925.803, 255.997), (927.113, 256.02), (927.113, 254.732)
+and right: Triangle: (927.136, 254.71), (927.113, 256.02), (927.113, 254.732)
+Rasterizing a left tri
+Scanlines are 926 to 927
+Working on scanline 926
+Y-intercepts are 256.001, 255.807
+Rows are 256 to 256
+Depositing color from triangle 26 into column 926, row 256
+Working on scanline 927
+Y-intercepts are 256.018, 254.841
+Rows are 255 to 256
+Depositing color from triangle 26 into column 927, row 255
+Depositing color from triangle 26 into column 927, row 256
+Working on a going right triangle
+The scanlines for this triangle are 928 to 927
+
+
+Triangle 27
+
+
+Splitting this triangle: Triangle: (927.136, 254.71), (928.446, 254.733), (927.113, 256.02)
+Into left: Triangle: (927.113, 256.02), (927.136, 254.71), (927.136, 255.998)
+and right: Triangle: (928.446, 254.733), (927.136, 254.71), (927.136, 255.998)
+Rasterizing a left tri
+Scanlines are 928 to 927
+Working on a going right triangle
+The scanlines for this triangle are 928 to 928
+Working on scanline 928
+Y-intercepts are 254.725, 255.163
+Rows are 255 to 255
+Depositing color from triangle 27 into column 928, row 255
+
+
+Triangle 28
+
+
+Splitting this triangle: Triangle: (928.423, 256.043), (927.113, 256.02), (928.446, 254.733)
+Into left: Triangle: (927.113, 256.02), (928.423, 256.043), (928.423, 254.755)
+and right: Triangle: (928.446, 254.733), (928.423, 256.043), (928.423, 254.755)
+Rasterizing a left tri
+Scanlines are 928 to 928
+Working on scanline 928
+Y-intercepts are 256.036, 255.163
+Rows are 256 to 256
+Depositing color from triangle 28 into column 928, row 256
+Working on a going right triangle
+The scanlines for this triangle are 929 to 928
+
+
+Triangle 29
+
+
+Splitting this triangle: Triangle: (928.446, 254.733), (929.756, 254.756), (928.423, 256.043)
+Into left: Triangle: (928.423, 256.043), (928.446, 254.733), (928.446, 256.021)
+and right: Triangle: (929.756, 254.756), (928.446, 254.733), (928.446, 256.021)
+Rasterizing a left tri
+Scanlines are 929 to 928
+Working on a going right triangle
+The scanlines for this triangle are 929 to 929
+Working on scanline 929
+Y-intercepts are 254.743, 255.486
+Rows are 255 to 255
+Depositing color from triangle 29 into column 929, row 255
+
+
+Triangle 30
+
+
+Splitting this triangle: Triangle: (929.733, 256.066), (928.423, 256.043), (929.756, 254.756)
+Into left: Triangle: (928.423, 256.043), (929.733, 256.066), (929.733, 254.778)
+and right: Triangle: (929.756, 254.756), (929.733, 256.066), (929.733, 254.778)
+Rasterizing a left tri
+Scanlines are 929 to 929
+Working on scanline 929
+Y-intercepts are 256.053, 255.486
+Rows are 256 to 256
+Depositing color from triangle 30 into column 929, row 256
+Working on a going right triangle
+The scanlines for this triangle are 930 to 929
+
+
+Triangle 31
+
+
+Splitting this triangle: Triangle: (929.756, 254.756), (931.066, 254.779), (929.733, 256.066)
+Into left: Triangle: (929.733, 256.066), (929.756, 254.756), (929.756, 256.044)
+and right: Triangle: (931.066, 254.779), (929.756, 254.756), (929.756, 256.044)
+Rasterizing a left tri
+Scanlines are 930 to 929
+Working on a going right triangle
+The scanlines for this triangle are 930 to 931
+Working on scanline 930
+Y-intercepts are 254.76, 255.808
+Rows are 255 to 255
+Depositing color from triangle 31 into column 930, row 255
+Working on scanline 931
+Y-intercepts are 254.778, 254.842
+Rows are 255 to 254
+
+
+Triangle 32
+
+
+Splitting this triangle: Triangle: (931.043, 256.089), (929.733, 256.066), (931.066, 254.779)
+Into left: Triangle: (929.733, 256.066), (931.043, 256.089), (931.043, 254.801)
+and right: Triangle: (931.066, 254.779), (931.043, 256.089), (931.043, 254.801)
+Rasterizing a left tri
+Scanlines are 930 to 931
+Working on scanline 930
+Y-intercepts are 256.071, 255.808
+Rows are 256 to 256
+Depositing color from triangle 32 into column 930, row 256
+Working on scanline 931
+Y-intercepts are 256.088, 254.842
+Rows are 255 to 256
+Depositing color from triangle 32 into column 931, row 255
+Depositing color from triangle 32 into column 931, row 256
+Working on a going right triangle
+The scanlines for this triangle are 932 to 931
+
+
+Triangle 33
+
+
+Splitting this triangle: Triangle: (931.066, 254.779), (932.376, 254.802), (931.043, 256.089)
+Into left: Triangle: (931.043, 256.089), (931.066, 254.779), (931.066, 256.067)
+and right: Triangle: (932.376, 254.802), (931.066, 254.779), (931.066, 256.067)
+Rasterizing a left tri
+Scanlines are 932 to 931
+Working on a going right triangle
+The scanlines for this triangle are 932 to 932
+Working on scanline 932
+Y-intercepts are 254.795, 255.164
+Rows are 255 to 255
+Depositing color from triangle 33 into column 932, row 255
+
+
+Triangle 34
+
+
+Splitting this triangle: Triangle: (932.353, 256.112), (931.043, 256.089), (932.376, 254.802)
+Into left: Triangle: (931.043, 256.089), (932.353, 256.112), (932.353, 254.824)
+and right: Triangle: (932.376, 254.802), (932.353, 256.112), (932.353, 254.824)
+Rasterizing a left tri
+Scanlines are 932 to 932
+Working on scanline 932
+Y-intercepts are 256.106, 255.164
+Rows are 256 to 256
+Depositing color from triangle 34 into column 932, row 256
+Working on a going right triangle
+The scanlines for this triangle are 933 to 932
+
+
+Triangle 35
+
+
+Splitting this triangle: Triangle: (932.376, 254.802), (933.686, 254.825), (932.353, 256.112)
+Into left: Triangle: (932.353, 256.112), (932.376, 254.802), (932.376, 256.09)
+and right: Triangle: (933.686, 254.825), (932.376, 254.802), (932.376, 256.09)
+Rasterizing a left tri
+Scanlines are 933 to 932
+Working on a going right triangle
+The scanlines for this triangle are 933 to 933
+Working on scanline 933
+Y-intercepts are 254.813, 255.487
+Rows are 255 to 255
+Depositing color from triangle 35 into column 933, row 255
+
+
+Triangle 36
+
+
+Splitting this triangle: Triangle: (933.663, 256.135), (932.353, 256.112), (933.686, 254.825)
+Into left: Triangle: (932.353, 256.112), (933.663, 256.135), (933.663, 254.847)
+and right: Triangle: (933.686, 254.825), (933.663, 256.135), (933.663, 254.847)
+Rasterizing a left tri
+Scanlines are 933 to 933
+Working on scanline 933
+Y-intercepts are 256.123, 255.487
+Rows are 256 to 256
+Depositing color from triangle 36 into column 933, row 256
+Working on a going right triangle
+The scanlines for this triangle are 934 to 933
+
+
+Triangle 37
+
+
+Splitting this triangle: Triangle: (933.686, 254.825), (934.996, 254.847), (933.663, 256.135)
+Into left: Triangle: (933.663, 256.135), (933.686, 254.825), (933.686, 256.113)
+and right: Triangle: (934.996, 254.847), (933.686, 254.825), (933.686, 256.113)
+Rasterizing a left tri
+Scanlines are 934 to 933
+Working on a going right triangle
+The scanlines for this triangle are 934 to 934
+Working on scanline 934
+Y-intercepts are 254.83, 255.809
+Rows are 255 to 255
+Depositing color from triangle 37 into column 934, row 255
+
+
+Triangle 38
+
+
+Splitting this triangle: Triangle: (934.973, 256.157), (933.663, 256.135), (934.996, 254.847)
+Into left: Triangle: (933.663, 256.135), (934.973, 256.157), (934.973, 254.869)
+and right: Triangle: (934.996, 254.847), (934.973, 256.157), (934.973, 254.869)
+Rasterizing a left tri
+Scanlines are 934 to 934
+Working on scanline 934
+Y-intercepts are 256.14, 255.809
+Rows are 256 to 256
+Depositing color from triangle 38 into column 934, row 256
+Working on a going right triangle
+The scanlines for this triangle are 935 to 934
+
+
+Triangle 39
+
+
+Splitting this triangle: Triangle: (934.996, 254.847), (936.306, 254.87), (934.973, 256.157)
+Into left: Triangle: (934.973, 256.157), (934.996, 254.847), (934.996, 256.135)
+and right: Triangle: (936.306, 254.87), (934.996, 254.847), (934.996, 256.135)
+Rasterizing a left tri
+Scanlines are 935 to 934
+Working on a going right triangle
+The scanlines for this triangle are 935 to 936
+Working on scanline 935
+Y-intercepts are 254.848, 256.131
+Rows are 255 to 256
+Depositing color from triangle 39 into column 935, row 255
+Depositing color from triangle 39 into column 935, row 256
+Working on scanline 936
+Y-intercepts are 254.865, 255.165
+Rows are 255 to 255
+Depositing color from triangle 39 into column 936, row 255
+
+
+Triangle 40
+
+
+Splitting this triangle: Triangle: (936.283, 256.18), (934.973, 256.157), (936.306, 254.87)
+Into left: Triangle: (934.973, 256.157), (936.283, 256.18), (936.283, 254.892)
+and right: Triangle: (936.306, 254.87), (936.283, 256.18), (936.283, 254.892)
+Rasterizing a left tri
+Scanlines are 935 to 936
+Working on scanline 935
+Y-intercepts are 256.158, 256.131
+Rows are 257 to 256
+Working on scanline 936
+Y-intercepts are 256.175, 255.165
+Rows are 256 to 256
+Depositing color from triangle 40 into column 936, row 256
+Working on a going right triangle
+The scanlines for this triangle are 937 to 936
+
+
+Triangle 41
+
+
+Splitting this triangle: Triangle: (936.306, 254.87), (937.616, 254.893), (936.283, 256.18)
+Into left: Triangle: (936.283, 256.18), (936.306, 254.87), (936.306, 256.158)
+and right: Triangle: (937.616, 254.893), (936.306, 254.87), (936.306, 256.158)
+Rasterizing a left tri
+Scanlines are 937 to 936
+Working on a going right triangle
+The scanlines for this triangle are 937 to 937
+Working on scanline 937
+Y-intercepts are 254.882, 255.488
+Rows are 255 to 255
+Depositing color from triangle 41 into column 937, row 255
+
+
+Triangle 42
+
+
+Splitting this triangle: Triangle: (937.593, 256.203), (936.283, 256.18), (937.616, 254.893)
+Into left: Triangle: (936.283, 256.18), (937.593, 256.203), (937.593, 254.915)
+and right: Triangle: (937.616, 254.893), (937.593, 256.203), (937.593, 254.915)
+Rasterizing a left tri
+Scanlines are 937 to 937
+Working on scanline 937
+Y-intercepts are 256.193, 255.488
+Rows are 256 to 256
+Depositing color from triangle 42 into column 937, row 256
+Working on a going right triangle
+The scanlines for this triangle are 938 to 937
+
+
+Triangle 43
+
+
+Splitting this triangle: Triangle: (937.616, 254.893), (938.926, 254.916), (937.593, 256.203)
+Into left: Triangle: (937.593, 256.203), (937.616, 254.893), (937.616, 256.181)
+and right: Triangle: (938.926, 254.916), (937.616, 254.893), (937.616, 256.181)
+Rasterizing a left tri
+Scanlines are 938 to 937
+Working on a going right triangle
+The scanlines for this triangle are 938 to 938
+Working on scanline 938
+Y-intercepts are 254.9, 255.81
+Rows are 255 to 255
+Depositing color from triangle 43 into column 938, row 255
+
+
+Triangle 44
+
+
+Splitting this triangle: Triangle: (938.903, 256.226), (937.593, 256.203), (938.926, 254.916)
+Into left: Triangle: (937.593, 256.203), (938.903, 256.226), (938.903, 254.938)
+and right: Triangle: (938.926, 254.916), (938.903, 256.226), (938.903, 254.938)
+Rasterizing a left tri
+Scanlines are 938 to 938
+Working on scanline 938
+Y-intercepts are 256.21, 255.81
+Rows are 256 to 256
+Depositing color from triangle 44 into column 938, row 256
+Working on a going right triangle
+The scanlines for this triangle are 939 to 938
+
+
+Triangle 45
+
+
+Splitting this triangle: Triangle: (938.926, 254.916), (940.236, 254.939), (938.903, 256.226)
+Into left: Triangle: (938.903, 256.226), (938.926, 254.916), (938.926, 256.204)
+and right: Triangle: (940.236, 254.939), (938.926, 254.916), (938.926, 256.204)
+Rasterizing a left tri
+Scanlines are 939 to 938
+Working on a going right triangle
+The scanlines for this triangle are 939 to 940
+Working on scanline 939
+Y-intercepts are 254.917, 256.132
+Rows are 255 to 256
+Depositing color from triangle 45 into column 939, row 255
+Depositing color from triangle 45 into column 939, row 256
+Working on scanline 940
+Y-intercepts are 254.935, 255.166
+Rows are 255 to 255
+Depositing color from triangle 45 into column 940, row 255
+
+
+Triangle 46
+
+
+Splitting this triangle: Triangle: (940.213, 256.249), (938.903, 256.226), (940.236, 254.939)
+Into left: Triangle: (938.903, 256.226), (940.213, 256.249), (940.213, 254.961)
+and right: Triangle: (940.236, 254.939), (940.213, 256.249), (940.213, 254.961)
+Rasterizing a left tri
+Scanlines are 939 to 940
+Working on scanline 939
+Y-intercepts are 256.228, 256.132
+Rows are 257 to 256
+Working on scanline 940
+Y-intercepts are 256.245, 255.166
+Rows are 256 to 256
+Depositing color from triangle 46 into column 940, row 256
+Working on a going right triangle
+The scanlines for this triangle are 941 to 940
+
+
+Triangle 47
+
+
+Splitting this triangle: Triangle: (915.323, 255.814), (916.633, 255.837), (915.3, 257.124)
+Into left: Triangle: (915.3, 257.124), (915.323, 255.814), (915.323, 257.102)
+and right: Triangle: (916.633, 255.837), (915.323, 255.814), (915.323, 257.102)
+Rasterizing a left tri
+Scanlines are 916 to 915
+Working on a going right triangle
+The scanlines for this triangle are 916 to 916
+Working on scanline 916
+Y-intercepts are 255.826, 256.448
+Rows are 256 to 256
+Depositing color from triangle 47 into column 916, row 256
+
+
+Triangle 48
+
+
+Splitting this triangle: Triangle: (916.61, 257.147), (915.3, 257.124), (916.633, 255.837)
+Into left: Triangle: (915.3, 257.124), (916.61, 257.147), (916.61, 255.859)
+and right: Triangle: (916.633, 255.837), (916.61, 257.147), (916.61, 255.859)
+Rasterizing a left tri
+Scanlines are 916 to 916
+Working on scanline 916
+Y-intercepts are 257.137, 256.448
+Rows are 257 to 257
+Depositing color from triangle 48 into column 916, row 257
+Working on a going right triangle
+The scanlines for this triangle are 917 to 916
+
+
+Triangle 49
+
+
+Splitting this triangle: Triangle: (916.633, 255.837), (917.943, 255.86), (916.61, 257.147)
+Into left: Triangle: (916.61, 257.147), (916.633, 255.837), (916.633, 257.125)
+and right: Triangle: (917.943, 255.86), (916.633, 255.837), (916.633, 257.125)
+Rasterizing a left tri
+Scanlines are 917 to 916
+Working on a going right triangle
+The scanlines for this triangle are 917 to 917
+Working on scanline 917
+Y-intercepts are 255.844, 256.771
+Rows are 256 to 256
+Depositing color from triangle 49 into column 917, row 256
+
+
+Triangle 50
+
+
+Splitting this triangle: Triangle: (917.92, 257.17), (916.61, 257.147), (917.943, 255.86)
+Into left: Triangle: (916.61, 257.147), (917.92, 257.17), (917.92, 255.882)
+and right: Triangle: (917.943, 255.86), (917.92, 257.17), (917.92, 255.882)
+Rasterizing a left tri
+Scanlines are 917 to 917
+Working on scanline 917
+Y-intercepts are 257.154, 256.771
+Rows are 257 to 257
+Depositing color from triangle 50 into column 917, row 257
+Working on a going right triangle
+The scanlines for this triangle are 918 to 917
+
+
+Triangle 51
+
+
+Splitting this triangle: Triangle: (917.943, 255.86), (919.253, 255.883), (917.92, 257.17)
+Into left: Triangle: (917.92, 257.17), (917.943, 255.86), (917.943, 257.148)
+and right: Triangle: (919.253, 255.883), (917.943, 255.86), (917.943, 257.148)
+Rasterizing a left tri
+Scanlines are 918 to 917
+Working on a going right triangle
+The scanlines for this triangle are 918 to 919
+Working on scanline 918
+Y-intercepts are 255.861, 257.093
+Rows are 256 to 257
+Depositing color from triangle 51 into column 918, row 256
+Depositing color from triangle 51 into column 918, row 257
+Working on scanline 919
+Y-intercepts are 255.879, 256.127
+Rows are 256 to 256
+Depositing color from triangle 51 into column 919, row 256
+
+
+Triangle 52
+
+
+Splitting this triangle: Triangle: (919.23, 257.193), (917.92, 257.17), (919.253, 255.883)
+Into left: Triangle: (917.92, 257.17), (919.23, 257.193), (919.23, 255.905)
+and right: Triangle: (919.253, 255.883), (919.23, 257.193), (919.23, 255.905)
+Rasterizing a left tri
+Scanlines are 918 to 919
+Working on scanline 918
+Y-intercepts are 257.172, 257.093
+Rows are 258 to 257
+Working on scanline 919
+Y-intercepts are 257.189, 256.127
+Rows are 257 to 257
+Depositing color from triangle 52 into column 919, row 257
+Working on a going right triangle
+The scanlines for this triangle are 920 to 919
+
+
+Triangle 53
+
+
+Splitting this triangle: Triangle: (919.253, 255.883), (920.563, 255.906), (919.23, 257.193)
+Into left: Triangle: (919.23, 257.193), (919.253, 255.883), (919.253, 257.171)
+and right: Triangle: (920.563, 255.906), (919.253, 255.883), (919.253, 257.171)
+Rasterizing a left tri
+Scanlines are 920 to 919
+Working on a going right triangle
+The scanlines for this triangle are 920 to 920
+Working on scanline 920
+Y-intercepts are 255.896, 256.449
+Rows are 256 to 256
+Depositing color from triangle 53 into column 920, row 256
+
+
+Triangle 54
+
+
+Splitting this triangle: Triangle: (920.54, 257.216), (919.23, 257.193), (920.563, 255.906)
+Into left: Triangle: (919.23, 257.193), (920.54, 257.216), (920.54, 255.928)
+and right: Triangle: (920.563, 255.906), (920.54, 257.216), (920.54, 255.928)
+Rasterizing a left tri
+Scanlines are 920 to 920
+Working on scanline 920
+Y-intercepts are 257.206, 256.449
+Rows are 257 to 257
+Depositing color from triangle 54 into column 920, row 257
+Working on a going right triangle
+The scanlines for this triangle are 921 to 920
+
+
+Triangle 55
+
+
+Splitting this triangle: Triangle: (920.563, 255.906), (921.873, 255.929), (920.54, 257.216)
+Into left: Triangle: (920.54, 257.216), (920.563, 255.906), (920.563, 257.194)
+and right: Triangle: (921.873, 255.929), (920.563, 255.906), (920.563, 257.194)
+Rasterizing a left tri
+Scanlines are 921 to 920
+Working on a going right triangle
+The scanlines for this triangle are 921 to 921
+Working on scanline 921
+Y-intercepts are 255.914, 256.772
+Rows are 256 to 256
+Depositing color from triangle 55 into column 921, row 256
+
+
+Triangle 56
+
+
+Splitting this triangle: Triangle: (921.85, 257.239), (920.54, 257.216), (921.873, 255.929)
+Into left: Triangle: (920.54, 257.216), (921.85, 257.239), (921.85, 255.951)
+and right: Triangle: (921.873, 255.929), (921.85, 257.239), (921.85, 255.951)
+Rasterizing a left tri
+Scanlines are 921 to 921
+Working on scanline 921
+Y-intercepts are 257.224, 256.772
+Rows are 257 to 257
+Depositing color from triangle 56 into column 921, row 257
+Working on a going right triangle
+The scanlines for this triangle are 922 to 921
+
+
+Triangle 57
+
+
+Splitting this triangle: Triangle: (921.873, 255.929), (923.183, 255.952), (921.85, 257.239)
+Into left: Triangle: (921.85, 257.239), (921.873, 255.929), (921.873, 257.217)
+and right: Triangle: (923.183, 255.952), (921.873, 255.929), (921.873, 257.217)
+Rasterizing a left tri
+Scanlines are 922 to 921
+Working on a going right triangle
+The scanlines for this triangle are 922 to 923
+Working on scanline 922
+Y-intercepts are 255.931, 257.094
+Rows are 256 to 257
+Depositing color from triangle 57 into column 922, row 256
+Depositing color from triangle 57 into column 922, row 257
+Working on scanline 923
+Y-intercepts are 255.948, 256.128
+Rows are 256 to 256
+Depositing color from triangle 57 into column 923, row 256
+
+
+Triangle 58
+
+
+Splitting this triangle: Triangle: (923.16, 257.262), (921.85, 257.239), (923.183, 255.952)
+Into left: Triangle: (921.85, 257.239), (923.16, 257.262), (923.16, 255.974)
+and right: Triangle: (923.183, 255.952), (923.16, 257.262), (923.16, 255.974)
+Rasterizing a left tri
+Scanlines are 922 to 923
+Working on scanline 922
+Y-intercepts are 257.241, 257.094
+Rows are 258 to 257
+Working on scanline 923
+Y-intercepts are 257.259, 256.128
+Rows are 257 to 257
+Depositing color from triangle 58 into column 923, row 257
+Working on a going right triangle
+The scanlines for this triangle are 924 to 923
+
+
+Triangle 59
+
+
+Splitting this triangle: Triangle: (923.183, 255.952), (924.493, 255.975), (923.16, 257.262)
+Into left: Triangle: (923.16, 257.262), (923.183, 255.952), (923.183, 257.24)
+and right: Triangle: (924.493, 255.975), (923.183, 255.952), (923.183, 257.24)
+Rasterizing a left tri
+Scanlines are 924 to 923
+Working on a going right triangle
+The scanlines for this triangle are 924 to 924
+Working on scanline 924
+Y-intercepts are 255.966, 256.45
+Rows are 256 to 256
+Depositing color from triangle 59 into column 924, row 256
+
+
+Triangle 60
+
+
+Splitting this triangle: Triangle: (924.47, 257.284), (923.16, 257.262), (924.493, 255.975)
+Into left: Triangle: (923.16, 257.262), (924.47, 257.284), (924.47, 255.997)
+and right: Triangle: (924.493, 255.975), (924.47, 257.284), (924.47, 255.997)
+Rasterizing a left tri
+Scanlines are 924 to 924
+Working on scanline 924
+Y-intercepts are 257.276, 256.45
+Rows are 257 to 257
+Depositing color from triangle 60 into column 924, row 257
+Working on a going right triangle
+The scanlines for this triangle are 925 to 924
+
+
+Triangle 61
+
+
+Splitting this triangle: Triangle: (924.493, 255.975), (925.803, 255.997), (924.47, 257.284)
+Into left: Triangle: (924.47, 257.284), (924.493, 255.975), (924.493, 257.262)
+and right: Triangle: (925.803, 255.997), (924.493, 255.975), (924.493, 257.262)
+Rasterizing a left tri
+Scanlines are 925 to 924
+Working on a going right triangle
+The scanlines for this triangle are 925 to 925
+Working on scanline 925
+Y-intercepts are 255.983, 256.773
+Rows are 256 to 256
+Depositing color from triangle 61 into column 925, row 256
+
+
+Triangle 62
+
+
+Splitting this triangle: Triangle: (925.78, 257.307), (924.47, 257.284), (925.803, 255.997)
+Into left: Triangle: (924.47, 257.284), (925.78, 257.307), (925.78, 256.019)
+and right: Triangle: (925.803, 255.997), (925.78, 257.307), (925.78, 256.019)
+Rasterizing a left tri
+Scanlines are 925 to 925
+Working on scanline 925
+Y-intercepts are 257.294, 256.773
+Rows are 257 to 257
+Depositing color from triangle 62 into column 925, row 257
+Working on a going right triangle
+The scanlines for this triangle are 926 to 925
+
+
+Triangle 63
+
+
+Splitting this triangle: Triangle: (925.803, 255.997), (927.113, 256.02), (925.78, 257.307)
+Into left: Triangle: (925.78, 257.307), (925.803, 255.997), (925.803, 257.285)
+and right: Triangle: (927.113, 256.02), (925.803, 255.997), (925.803, 257.285)
+Rasterizing a left tri
+Scanlines are 926 to 925
+Working on a going right triangle
+The scanlines for this triangle are 926 to 927
+Working on scanline 926
+Y-intercepts are 256.001, 257.095
+Rows are 257 to 257
+Depositing color from triangle 63 into column 926, row 257
+Working on scanline 927
+Y-intercepts are 256.018, 256.129
+Rows are 257 to 256
+
+
+Triangle 64
+
+
+Splitting this triangle: Triangle: (927.09, 257.33), (925.78, 257.307), (927.113, 256.02)
+Into left: Triangle: (925.78, 257.307), (927.09, 257.33), (927.09, 256.042)
+and right: Triangle: (927.113, 256.02), (927.09, 257.33), (927.09, 256.042)
+Rasterizing a left tri
+Scanlines are 926 to 927
+Working on scanline 926
+Y-intercepts are 257.311, 257.095
+Rows are 258 to 257
+Working on scanline 927
+Y-intercepts are 257.329, 256.129
+Rows are 257 to 257
+Depositing color from triangle 64 into column 927, row 257
+Working on a going right triangle
+The scanlines for this triangle are 928 to 927
+
+
+Triangle 65
+
+
+Splitting this triangle: Triangle: (927.113, 256.02), (928.423, 256.043), (927.09, 257.33)
+Into left: Triangle: (927.09, 257.33), (927.113, 256.02), (927.113, 257.308)
+and right: Triangle: (928.423, 256.043), (927.113, 256.02), (927.113, 257.308)
+Rasterizing a left tri
+Scanlines are 928 to 927
+Working on a going right triangle
+The scanlines for this triangle are 928 to 928
+Working on scanline 928
+Y-intercepts are 256.036, 256.451
+Rows are 257 to 256
+
+
+Triangle 66
+
+
+Splitting this triangle: Triangle: (928.4, 257.353), (927.09, 257.33), (928.423, 256.043)
+Into left: Triangle: (927.09, 257.33), (928.4, 257.353), (928.4, 256.065)
+and right: Triangle: (928.423, 256.043), (928.4, 257.353), (928.4, 256.065)
+Rasterizing a left tri
+Scanlines are 928 to 928
+Working on scanline 928
+Y-intercepts are 257.346, 256.451
+Rows are 257 to 257
+Depositing color from triangle 66 into column 928, row 257
+Working on a going right triangle
+The scanlines for this triangle are 929 to 928
+
+
+Triangle 67
+
+
+Splitting this triangle: Triangle: (928.423, 256.043), (929.733, 256.066), (928.4, 257.353)
+Into left: Triangle: (928.4, 257.353), (928.423, 256.043), (928.423, 257.331)
+and right: Triangle: (929.733, 256.066), (928.423, 256.043), (928.423, 257.331)
+Rasterizing a left tri
+Scanlines are 929 to 928
+Working on a going right triangle
+The scanlines for this triangle are 929 to 929
+Working on scanline 929
+Y-intercepts are 256.053, 256.774
+Rows are 257 to 256
+
+
+Triangle 68
+
+
+Splitting this triangle: Triangle: (929.71, 257.376), (928.4, 257.353), (929.733, 256.066)
+Into left: Triangle: (928.4, 257.353), (929.71, 257.376), (929.71, 256.088)
+and right: Triangle: (929.733, 256.066), (929.71, 257.376), (929.71, 256.088)
+Rasterizing a left tri
+Scanlines are 929 to 929
+Working on scanline 929
+Y-intercepts are 257.364, 256.774
+Rows are 257 to 257
+Depositing color from triangle 68 into column 929, row 257
+Working on a going right triangle
+The scanlines for this triangle are 930 to 929
+
+
+Triangle 69
+
+
+Splitting this triangle: Triangle: (929.733, 256.066), (931.043, 256.089), (929.71, 257.376)
+Into left: Triangle: (929.71, 257.376), (929.733, 256.066), (929.733, 257.354)
+and right: Triangle: (931.043, 256.089), (929.733, 256.066), (929.733, 257.354)
+Rasterizing a left tri
+Scanlines are 930 to 929
+Working on a going right triangle
+The scanlines for this triangle are 930 to 931
+Working on scanline 930
+Y-intercepts are 256.071, 257.096
+Rows are 257 to 257
+Depositing color from triangle 69 into column 930, row 257
+Working on scanline 931
+Y-intercepts are 256.088, 256.13
+Rows are 257 to 256
+
+
+Triangle 70
+
+
+Splitting this triangle: Triangle: (931.02, 257.399), (929.71, 257.376), (931.043, 256.089)
+Into left: Triangle: (929.71, 257.376), (931.02, 257.399), (931.02, 256.111)
+and right: Triangle: (931.043, 256.089), (931.02, 257.399), (931.02, 256.111)
+Rasterizing a left tri
+Scanlines are 930 to 931
+Working on scanline 930
+Y-intercepts are 257.381, 257.096
+Rows are 258 to 257
+Working on scanline 931
+Y-intercepts are 257.398, 256.13
+Rows are 257 to 257
+Depositing color from triangle 70 into column 931, row 257
+Working on a going right triangle
+The scanlines for this triangle are 932 to 931
+
+
+Triangle 71
+
+
+Splitting this triangle: Triangle: (931.043, 256.089), (932.353, 256.112), (931.02, 257.399)
+Into left: Triangle: (931.02, 257.399), (931.043, 256.089), (931.043, 257.377)
+and right: Triangle: (932.353, 256.112), (931.043, 256.089), (931.043, 257.377)
+Rasterizing a left tri
+Scanlines are 932 to 931
+Working on a going right triangle
+The scanlines for this triangle are 932 to 932
+Working on scanline 932
+Y-intercepts are 256.106, 256.452
+Rows are 257 to 256
+
+
+Triangle 72
+
+
+Splitting this triangle: Triangle: (932.33, 257.422), (931.02, 257.399), (932.353, 256.112)
+Into left: Triangle: (931.02, 257.399), (932.33, 257.422), (932.33, 256.134)
+and right: Triangle: (932.353, 256.112), (932.33, 257.422), (932.33, 256.134)
+Rasterizing a left tri
+Scanlines are 932 to 932
+Working on scanline 932
+Y-intercepts are 257.416, 256.452
+Rows are 257 to 257
+Depositing color from triangle 72 into column 932, row 257
+Working on a going right triangle
+The scanlines for this triangle are 933 to 932
+
+
+Triangle 73
+
+
+Splitting this triangle: Triangle: (932.353, 256.112), (933.663, 256.135), (932.33, 257.422)
+Into left: Triangle: (932.33, 257.422), (932.353, 256.112), (932.353, 257.4)
+and right: Triangle: (933.663, 256.135), (932.353, 256.112), (932.353, 257.4)
+Rasterizing a left tri
+Scanlines are 933 to 932
+Working on a going right triangle
+The scanlines for this triangle are 933 to 933
+Working on scanline 933
+Y-intercepts are 256.123, 256.775
+Rows are 257 to 256
+
+
+Triangle 74
+
+
+Splitting this triangle: Triangle: (933.64, 257.445), (932.33, 257.422), (933.663, 256.135)
+Into left: Triangle: (932.33, 257.422), (933.64, 257.445), (933.64, 256.157)
+and right: Triangle: (933.663, 256.135), (933.64, 257.445), (933.64, 256.157)
+Rasterizing a left tri
+Scanlines are 933 to 933
+Working on scanline 933
+Y-intercepts are 257.433, 256.775
+Rows are 257 to 257
+Depositing color from triangle 74 into column 933, row 257
+Working on a going right triangle
+The scanlines for this triangle are 934 to 933
+
+
+Triangle 75
+
+
+Splitting this triangle: Triangle: (933.663, 256.135), (934.973, 256.157), (933.64, 257.445)
+Into left: Triangle: (933.64, 257.445), (933.663, 256.135), (933.663, 257.422)
+and right: Triangle: (934.973, 256.157), (933.663, 256.135), (933.663, 257.422)
+Rasterizing a left tri
+Scanlines are 934 to 933
+Working on a going right triangle
+The scanlines for this triangle are 934 to 934
+Working on scanline 934
+Y-intercepts are 256.14, 257.097
+Rows are 257 to 257
+Depositing color from triangle 75 into column 934, row 257
+
+
+Triangle 76
+
+
+Splitting this triangle: Triangle: (934.95, 257.467), (933.64, 257.445), (934.973, 256.157)
+Into left: Triangle: (933.64, 257.445), (934.95, 257.467), (934.95, 256.18)
+and right: Triangle: (934.973, 256.157), (934.95, 257.467), (934.95, 256.18)
+Rasterizing a left tri
+Scanlines are 934 to 934
+Working on scanline 934
+Y-intercepts are 257.451, 257.097
+Rows are 258 to 257
+Working on a going right triangle
+The scanlines for this triangle are 935 to 934
+
+
+Triangle 77
+
+
+Splitting this triangle: Triangle: (934.973, 256.157), (936.283, 256.18), (934.95, 257.467)
+Into left: Triangle: (934.95, 257.467), (934.973, 256.157), (934.973, 257.445)
+and right: Triangle: (936.283, 256.18), (934.973, 256.157), (934.973, 257.445)
+Rasterizing a left tri
+Scanlines are 935 to 934
+Working on a going right triangle
+The scanlines for this triangle are 935 to 936
+Working on scanline 935
+Y-intercepts are 256.158, 257.419
+Rows are 257 to 257
+Depositing color from triangle 77 into column 935, row 257
+Working on scanline 936
+Y-intercepts are 256.175, 256.453
+Rows are 257 to 256
+
+
+Triangle 78
+
+
+Splitting this triangle: Triangle: (936.26, 257.49), (934.95, 257.467), (936.283, 256.18)
+Into left: Triangle: (934.95, 257.467), (936.26, 257.49), (936.26, 256.202)
+and right: Triangle: (936.283, 256.18), (936.26, 257.49), (936.26, 256.202)
+Rasterizing a left tri
+Scanlines are 935 to 936
+Working on scanline 935
+Y-intercepts are 257.468, 257.419
+Rows are 258 to 257
+Working on scanline 936
+Y-intercepts are 257.486, 256.453
+Rows are 257 to 257
+Depositing color from triangle 78 into column 936, row 257
+Working on a going right triangle
+The scanlines for this triangle are 937 to 936
+
+
+Triangle 79
+
+
+Splitting this triangle: Triangle: (936.283, 256.18), (937.593, 256.203), (936.26, 257.49)
+Into left: Triangle: (936.26, 257.49), (936.283, 256.18), (936.283, 257.468)
+and right: Triangle: (937.593, 256.203), (936.283, 256.18), (936.283, 257.468)
+Rasterizing a left tri
+Scanlines are 937 to 936
+Working on a going right triangle
+The scanlines for this triangle are 937 to 937
+Working on scanline 937
+Y-intercepts are 256.193, 256.776
+Rows are 257 to 256
+
+
+Triangle 80
+
+
+Splitting this triangle: Triangle: (937.57, 257.513), (936.26, 257.49), (937.593, 256.203)
+Into left: Triangle: (936.26, 257.49), (937.57, 257.513), (937.57, 256.225)
+and right: Triangle: (937.593, 256.203), (937.57, 257.513), (937.57, 256.225)
+Rasterizing a left tri
+Scanlines are 937 to 937
+Working on scanline 937
+Y-intercepts are 257.503, 256.776
+Rows are 257 to 257
+Depositing color from triangle 80 into column 937, row 257
+Working on a going right triangle
+The scanlines for this triangle are 938 to 937
+
+
+Triangle 81
+
+
+Splitting this triangle: Triangle: (937.593, 256.203), (938.903, 256.226), (937.57, 257.513)
+Into left: Triangle: (937.57, 257.513), (937.593, 256.203), (937.593, 257.491)
+and right: Triangle: (938.903, 256.226), (937.593, 256.203), (937.593, 257.491)
+Rasterizing a left tri
+Scanlines are 938 to 937
+Working on a going right triangle
+The scanlines for this triangle are 938 to 938
+Working on scanline 938
+Y-intercepts are 256.21, 257.098
+Rows are 257 to 257
+Depositing color from triangle 81 into column 938, row 257
+
+
+Triangle 82
+
+
+Splitting this triangle: Triangle: (938.88, 257.536), (937.57, 257.513), (938.903, 256.226)
+Into left: Triangle: (937.57, 257.513), (938.88, 257.536), (938.88, 256.248)
+and right: Triangle: (938.903, 256.226), (938.88, 257.536), (938.88, 256.248)
+Rasterizing a left tri
+Scanlines are 938 to 938
+Working on scanline 938
+Y-intercepts are 257.521, 257.098
+Rows are 258 to 257
+Working on a going right triangle
+The scanlines for this triangle are 939 to 938
+
+
+Triangle 83
+
+
+Splitting this triangle: Triangle: (938.903, 256.226), (940.213, 256.249), (938.88, 257.536)
+Into left: Triangle: (938.88, 257.536), (938.903, 256.226), (938.903, 257.514)
+and right: Triangle: (940.213, 256.249), (938.903, 256.226), (938.903, 257.514)
+Rasterizing a left tri
+Scanlines are 939 to 938
+Working on a going right triangle
+The scanlines for this triangle are 939 to 940
+Working on scanline 939
+Y-intercepts are 256.228, 257.42
+Rows are 257 to 257
+Depositing color from triangle 83 into column 939, row 257
+Working on scanline 940
+Y-intercepts are 256.245, 256.454
+Rows are 257 to 256
+
+
+Triangle 84
+
+
+Splitting this triangle: Triangle: (940.19, 257.559), (938.88, 257.536), (940.213, 256.249)
+Into left: Triangle: (938.88, 257.536), (940.19, 257.559), (940.19, 256.271)
+and right: Triangle: (940.213, 256.249), (940.19, 257.559), (940.19, 256.271)
+Rasterizing a left tri
+Scanlines are 939 to 940
+Working on scanline 939
+Y-intercepts are 257.538, 257.42
+Rows are 258 to 257
+Working on scanline 940
+Y-intercepts are 257.556, 256.454
+Rows are 257 to 257
+Depositing color from triangle 84 into column 940, row 257
+Working on a going right triangle
+The scanlines for this triangle are 941 to 940
+
+
+Triangle 85
+
+
+Splitting this triangle: Triangle: (940.213, 256.249), (941.523, 256.272), (940.19, 257.559)
+Into left: Triangle: (940.19, 257.559), (940.213, 256.249), (940.213, 257.537)
+and right: Triangle: (941.523, 256.272), (940.213, 256.249), (940.213, 257.537)
+Rasterizing a left tri
+Scanlines are 941 to 940
+Working on a going right triangle
+The scanlines for this triangle are 941 to 941
+Working on scanline 941
+Y-intercepts are 256.263, 256.777
+Rows are 257 to 256
+
+
+Triangle 86
+
+
+Splitting this triangle: Triangle: (941.5, 257.582), (940.19, 257.559), (941.523, 256.272)
+Into left: Triangle: (940.19, 257.559), (941.5, 257.582), (941.5, 256.294)
+and right: Triangle: (941.523, 256.272), (941.5, 257.582), (941.5, 256.294)
+Rasterizing a left tri
+Scanlines are 941 to 941
+Working on scanline 941
+Y-intercepts are 257.573, 256.777
+Rows are 257 to 257
+Depositing color from triangle 86 into column 941, row 257
+Working on a going right triangle
+The scanlines for this triangle are 942 to 941
+
+
+Triangle 87
+
+
+Splitting this triangle: Triangle: (903.505, 257.181), (903.487, 258.229), (902.18, 258.049)
+Into left: Triangle: (902.18, 258.049), (903.487, 258.229), (903.487, 257.193)
+and right: Triangle: (903.505, 257.181), (903.487, 258.229), (903.487, 257.193)
+Rasterizing a left tri
+Scanlines are 903 to 903
+Working on scanline 903
+Y-intercepts are 258.162, 257.511
+Rows are 258 to 258
+Depositing color from triangle 87 into column 903, row 258
+Working on a going right triangle
+The scanlines for this triangle are 904 to 903
+
+
+Triangle 88
+
+
+Splitting this triangle: Triangle: (902.177, 258.206), (902.18, 258.049), (903.487, 258.229)
+Into left: Triangle: (902.177, 258.206), (902.18, 258.049), (902.18, 258.206)
+and right: Triangle: (903.487, 258.229), (902.18, 258.049), (902.18, 258.206)
+Rasterizing a left tri
+Scanlines are 903 to 902
+Working on a going right triangle
+The scanlines for this triangle are 903 to 903
+Working on scanline 903
+Y-intercepts are 258.162, 258.22
+Rows are 259 to 258
+
+
+Triangle 89
+
+
+Splitting this triangle: Triangle: (904.82, 256.941), (904.797, 258.252), (903.505, 257.181)
+Into left: Triangle: (903.505, 257.181), (904.797, 258.252), (904.797, 256.946)
+and right: Triangle: (904.82, 256.941), (904.797, 258.252), (904.797, 256.946)
+Rasterizing a left tri
+Scanlines are 904 to 904
+Working on scanline 904
+Y-intercepts are 257.591, 257.091
+Rows are 258 to 257
+Working on a going right triangle
+The scanlines for this triangle are 905 to 904
+
+
+Triangle 90
+
+
+Splitting this triangle: Triangle: (903.487, 258.229), (903.505, 257.181), (904.797, 258.252)
+Into left: Triangle: (903.487, 258.229), (903.505, 257.181), (903.505, 258.229)
+and right: Triangle: (904.797, 258.252), (903.505, 257.181), (903.505, 258.229)
+Rasterizing a left tri
+Scanlines are 904 to 903
+Working on a going right triangle
+The scanlines for this triangle are 904 to 904
+Working on scanline 904
+Y-intercepts are 257.591, 258.238
+Rows are 258 to 258
+Depositing color from triangle 90 into column 904, row 258
+
+
+Triangle 91
+
+
+Splitting this triangle: Triangle: (904.82, 256.941), (906.13, 256.964), (904.797, 258.252)
+Into left: Triangle: (904.797, 258.252), (904.82, 256.941), (904.82, 258.229)
+and right: Triangle: (906.13, 256.964), (904.82, 256.941), (904.82, 258.229)
+Rasterizing a left tri
+Scanlines are 905 to 904
+Working on a going right triangle
+The scanlines for this triangle are 905 to 906
+Working on scanline 905
+Y-intercepts are 256.945, 258.055
+Rows are 257 to 258
+Depositing color from triangle 91 into column 905, row 257
+Depositing color from triangle 91 into column 905, row 258
+Working on scanline 906
+Y-intercepts are 256.962, 257.09
+Rows are 257 to 257
+Depositing color from triangle 91 into column 906, row 257
+
+
+Triangle 92
+
+
+Splitting this triangle: Triangle: (906.13, 256.964), (907.44, 256.987), (906.107, 258.274)
+Into left: Triangle: (906.107, 258.274), (906.13, 256.964), (906.13, 258.252)
+and right: Triangle: (907.44, 256.987), (906.13, 256.964), (906.13, 258.252)
+Rasterizing a left tri
+Scanlines are 907 to 906
+Working on a going right triangle
+The scanlines for this triangle are 907 to 907
+Working on scanline 907
+Y-intercepts are 256.98, 257.412
+Rows are 257 to 257
+Depositing color from triangle 92 into column 907, row 257
+
+
+Triangle 93
+
+
+Splitting this triangle: Triangle: (907.417, 258.297), (906.107, 258.274), (907.44, 256.987)
+Into left: Triangle: (906.107, 258.274), (907.417, 258.297), (907.417, 257.009)
+and right: Triangle: (907.44, 256.987), (907.417, 258.297), (907.417, 257.009)
+Rasterizing a left tri
+Scanlines are 907 to 907
+Working on scanline 907
+Y-intercepts are 258.29, 257.412
+Rows are 258 to 258
+Depositing color from triangle 93 into column 907, row 258
+Working on a going right triangle
+The scanlines for this triangle are 908 to 907
+
+
+Triangle 94
+
+
+Splitting this triangle: Triangle: (907.44, 256.987), (908.75, 257.01), (907.417, 258.297)
+Into left: Triangle: (907.417, 258.297), (907.44, 256.987), (907.44, 258.275)
+and right: Triangle: (908.75, 257.01), (907.44, 256.987), (907.44, 258.275)
+Rasterizing a left tri
+Scanlines are 908 to 907
+Working on a going right triangle
+The scanlines for this triangle are 908 to 908
+Working on scanline 908
+Y-intercepts are 256.997, 257.734
+Rows are 257 to 257
+Depositing color from triangle 94 into column 908, row 257
+
+
+Triangle 95
+
+
+Splitting this triangle: Triangle: (908.727, 258.32), (907.417, 258.297), (908.75, 257.01)
+Into left: Triangle: (907.417, 258.297), (908.727, 258.32), (908.727, 257.032)
+and right: Triangle: (908.75, 257.01), (908.727, 258.32), (908.727, 257.032)
+Rasterizing a left tri
+Scanlines are 908 to 908
+Working on scanline 908
+Y-intercepts are 258.307, 257.734
+Rows are 258 to 258
+Depositing color from triangle 95 into column 908, row 258
+Working on a going right triangle
+The scanlines for this triangle are 909 to 908
+
+
+Triangle 96
+
+
+Splitting this triangle: Triangle: (908.75, 257.01), (910.06, 257.033), (908.727, 258.32)
+Into left: Triangle: (908.727, 258.32), (908.75, 257.01), (908.75, 258.298)
+and right: Triangle: (910.06, 257.033), (908.75, 257.01), (908.75, 258.298)
+Rasterizing a left tri
+Scanlines are 909 to 908
+Working on a going right triangle
+The scanlines for this triangle are 909 to 910
+Working on scanline 909
+Y-intercepts are 257.014, 258.056
+Rows are 258 to 258
+Depositing color from triangle 96 into column 909, row 258
+Working on scanline 910
+Y-intercepts are 257.032, 257.091
+Rows are 258 to 257
+
+
+Triangle 97
+
+
+Splitting this triangle: Triangle: (910.037, 258.343), (908.727, 258.32), (910.06, 257.033)
+Into left: Triangle: (908.727, 258.32), (910.037, 258.343), (910.037, 257.055)
+and right: Triangle: (910.06, 257.033), (910.037, 258.343), (910.037, 257.055)
+Rasterizing a left tri
+Scanlines are 909 to 910
+Working on scanline 909
+Y-intercepts are 258.325, 258.056
+Rows are 259 to 258
+Working on scanline 910
+Y-intercepts are 258.342, 257.091
+Rows are 258 to 258
+Depositing color from triangle 97 into column 910, row 258
+Working on a going right triangle
+The scanlines for this triangle are 911 to 910
+
+
+Triangle 98
+
+
+Splitting this triangle: Triangle: (910.06, 257.033), (911.37, 257.056), (910.037, 258.343)
+Into left: Triangle: (910.037, 258.343), (910.06, 257.033), (910.06, 258.321)
+and right: Triangle: (911.37, 257.056), (910.06, 257.033), (910.06, 258.321)
+Rasterizing a left tri
+Scanlines are 911 to 910
+Working on a going right triangle
+The scanlines for this triangle are 911 to 911
+Working on scanline 911
+Y-intercepts are 257.049, 257.413
+Rows are 258 to 257
+
+
+Triangle 99
+
+
+Splitting this triangle: Triangle: (911.347, 258.366), (910.037, 258.343), (911.37, 257.056)
+Into left: Triangle: (910.037, 258.343), (911.347, 258.366), (911.347, 257.078)
+and right: Triangle: (911.37, 257.056), (911.347, 258.366), (911.347, 257.078)
+Rasterizing a left tri
+Scanlines are 911 to 911
+Working on scanline 911
+Y-intercepts are 258.36, 257.413
+Rows are 258 to 258
+Depositing color from triangle 99 into column 911, row 258
+Working on a going right triangle
+The scanlines for this triangle are 912 to 911

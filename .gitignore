@@ -332,3 +332,8 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Too Large?
+project1c/proj1c_geometry.vtk
+project1c/triangle_ids.txt
+project1d/proj1D_zrgb_tri.txt
