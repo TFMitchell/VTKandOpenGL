@@ -267,6 +267,24 @@ public:
     double bottomSlope, bottomRGBGradient[3], bottomZGradient, bottomStartPt[6]; //[6] is { X, Y, Z, R, G, B }
     double topSlope, topRGBGradient[3], topZGradient, topStartPt[6];
 
+    void renderToDeviceSpace(Matrix transformation)
+    {
+
+        for (int i = 0; i < 3; i++)
+        {
+            double newX, newY, newZ;
+            newX = transformation.A[0][0] * X[i] + transformation.A[1][0] * Y[i] + transformation.A[2][0] * Z[i] + transformation.A[3][0];
+            newY = transformation.A[0][1] * X[i] + transformation.A[1][1] * Y[i] + transformation.A[2][1] * Z[i] + transformation.A[3][1];
+            newZ = transformation.A[0][2] * X[i] + transformation.A[1][2] * Y[i] + transformation.A[2][2] * Z[i] + transformation.A[3][2];
+            double W = transformation.A[0][3] * X[i] + transformation.A[1][3] * Y[i] + transformation.A[2][3] * Z[i] + transformation.A[3][3];
+
+            X[i] = newX / W;
+            Y[i] = newY / W;
+            Z[i] = newZ / W;
+        }
+        
+    }
+
     void sortPointsByX() //this will sort X[] values (ascending) for this triangle and shuffle the Y[] as well so it matches
                          //using vectors and built-in sorting methods was much too slow for the volume of triangles we're processing, so I had to make this
     {
@@ -622,14 +640,28 @@ int main()
     std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file
     std::vector<Triangle> triangles; //triangles we're actually gonna use
 
+
+    Camera cam = GetCamera(0, 1000);
+
+    Matrix camTrans = cam.CameraTransform();
+
+    Matrix viewTrans = cam.ViewTransform();
+
+    Matrix devTrans = cam.DeviceTransform();
+
+    Matrix composite = Matrix::ComposeMatrices(Matrix::ComposeMatrices(camTrans, viewTrans), devTrans);
+
+
     //loop though each triangle read from file and add two generated triangles to triangles
     for (int t = 0; t < readTriangles.size(); t++)
     {
+        readTriangles[t].renderToDeviceSpace(composite);
+
         readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
 
         double slopeBetweenExtremeXs = (readTriangles[t].Y[2] - readTriangles[t].Y[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]); //the slope between the points of highest and lowest x values
         double zGradientBetweenExtremeXs = (readTriangles[t].Z[2] - readTriangles[t].Z[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]);
-        double colorGradientBetweenExtremeXs[3] =
+        double colorGradientBetweenExtremeXs[] =
         {
             (readTriangles[t].colors[2][0] - readTriangles[t].colors[0][0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
             (readTriangles[t].colors[2][1] - readTriangles[t].colors[0][1]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
@@ -700,7 +732,7 @@ int main()
 
     }
 
-    for (int f = 0; f <= 4; f++)
+    //for (int f = 0; f <= 4; f++)
     {
 
         Screen screen;
@@ -714,18 +746,6 @@ int main()
         for (int i = 0; i < 2; i++)
             colorsAtLimits[i] = (double*)malloc(sizeof(double) * 3);
 
-
-        Camera cam = GetCamera(f * 250, 1000);
-
-        Matrix camTrans = cam.CameraTransform();
-
-        Matrix viewTrans = cam.ViewTransform();
-
-        Matrix devTrans = cam.DeviceTransform();
-
-        Matrix composite = Matrix::ComposeMatrices(Matrix::ComposeMatrices(camTrans, viewTrans), devTrans);
-
-        double* out = (double*) malloc(sizeof(double) * 4);
 
         //looping through our generated triangles
         for (int t = 0; t < triangles.size(); t++)
@@ -757,7 +777,7 @@ int main()
                     if (zValue < zBuffer[currentRow * screen.width + scanPosition])
                         continue;
 
-                    zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer
+                    zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer              
 
                     //set this pixel's color
                     buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = ceil__441((colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
@@ -767,7 +787,6 @@ int main()
             }
         }
 
-        free(out);
         free(rowLimits);
         free(zAtLimits);
         for (int i = 0; i < 2; i++)
