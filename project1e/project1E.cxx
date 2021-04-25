@@ -3,7 +3,7 @@
 * 
 * I'll try my best to avoid using syntax Hank's compiler doesn't support.
 * 
-* 
+* The number of different pixels is zero, or a very small number for each of the four outputs.
 * 
 * Thomas Mitchell
 */
@@ -20,7 +20,7 @@
 #include <vtkFloatArray.h>
 #include <vtkCellArray.h>
 #include <vtkDoubleArray.h>
-#define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846 //this was necessary for my program to compile on a Windows machine. You might need to comment it out
 
 class Matrix
 {
@@ -33,7 +33,6 @@ public:
 };
 
 
-
 class Camera
 {
 public:
@@ -43,9 +42,7 @@ public:
     double          focus[3];
     double          up[3];
 
-    
-
-    Matrix          ViewTransform(void) 
+    Matrix ViewTransform(void) //get the viewTransform matrix
     { 
         Matrix rv;
 
@@ -71,9 +68,10 @@ public:
 
         return rv;
     };
-    Matrix          CameraTransform(void) 
-    { 
 
+    Matrix CameraTransform(void) //get the cameraTransform matrix
+    { 
+        //we use (position - focus) a lot, so declaring it here makes the code easier to understand
         double posMinusFocus[3];
         for (int i = 0; i < 3; i++)
             posMinusFocus[i] = position[i] - focus[i];
@@ -85,7 +83,6 @@ public:
             up[2] * posMinusFocus[0] - up[0] * posMinusFocus[2],
             up[0] * posMinusFocus[1] - up[1] * posMinusFocus[0]
         };
-
         normalize(U);
 
         //multiply position - focus by U
@@ -95,7 +92,6 @@ public:
             posMinusFocus[2] * U[0] - posMinusFocus[0] * U[2],
             posMinusFocus[0] * U[1] - posMinusFocus[1] * U[0]
         };
-
         normalize(V);
 
         //just position - focus normalized
@@ -105,7 +101,6 @@ public:
             posMinusFocus[1],
             posMinusFocus[2]
         };
-
         normalize(W);
 
         double t[] =
@@ -146,7 +141,8 @@ public:
 
         return rv;
     };
-    Matrix          DeviceTransform(void)
+
+    Matrix DeviceTransform(void) //get the deviceTransform matrix. This is hardcoded for a 1000x1000 output
     { 
         Matrix rv;
 
@@ -174,7 +170,7 @@ public:
     };
 
 private:
-    void normalize(double *myVector)
+    void normalize(double *myVector) //normalizes a vector in the form of a double with three elements
     {
         double magnitude = sqrt(pow(myVector[0], 2) + pow(myVector[1], 2) + pow(myVector[2], 2));
 
@@ -228,7 +224,6 @@ GetCamera(int frame, int nframes)
 }
 
 
-
 void
 Matrix::Print(ostream& o)
 {
@@ -269,7 +264,6 @@ public:
 
     void renderToDeviceSpace(Matrix transformation)
     {
-
         for (int i = 0; i < 3; i++)
         {
             double newX, newY, newZ;
@@ -281,8 +275,7 @@ public:
             X[i] = newX / W;
             Y[i] = newY / W;
             Z[i] = newZ / W;
-        }
-        
+        }     
     }
 
     void sortPointsByX() //this will sort X[] values (ascending) for this triangle and shuffle the Y[] as well so it matches
@@ -410,7 +403,6 @@ public:
             bottomRGBGradient[1] = (colors[2][1] - colors[idxLowYPt][1]) / (X[2] - X[idxLowYPt]);
             bottomRGBGradient[2] = (colors[2][2] - colors[idxLowYPt][2]) / (X[2] - X[idxLowYPt]);
 
-
             int idxHighPt = 0;
             if (idxLowYPt == 0)
                 idxHighPt = 1;
@@ -430,7 +422,6 @@ public:
             topRGBGradient[2] = (colors[2][2] - colors[idxHighPt][2]) / (X[2] - X[idxHighPt]);
         }
     }
-
 
     void getRowBounds(int column, double* rowLimits, double** colorsAtLimits, double* zAtLimits) //for a given column to scan, get back the rows between which we need to fill in, the colors at those endpoints,
                                                                                                   //and the z values at the endpoints. Make sure to run the above funtion first
@@ -554,10 +545,8 @@ GetTriangles(void)
             tris[idx].colors[j][2] = (RGB[r][2] + proportion * (RGB[r + 1][2] - RGB[r][2])) / 255.0;
         }
     }
-
     return tris;
 }
-
 
 
 void
@@ -626,126 +615,124 @@ WriteImage(vtkImageData* img, const char* filename)
 
 int main()
 {
+    //set up the image and screen. We'll fill with the 0's/-1's later
     vtkImageData* image = NewImage(1000, 1000);
-
-
-    unsigned char* buffer = (unsigned char*)image->GetScalarPointer(0, 0, 0);
-    for (int i = 0; i < 1000 * 1000 * 3; i++)
-        buffer[i] = 0;
-    
+    unsigned char* buffer = (unsigned char*)image->GetScalarPointer(0, 0, 0); 
     double *zBuffer = (double*) malloc (sizeof(double) * 1000 * 1000);
-    for (int i = 0; i < 1000 * 1000; i++)
-        zBuffer[i] = -1.f;
+
+    Screen screen;
+    screen.buffer = buffer;
+    screen.width = 1000;
+    screen.height = 1000;
+
+    //allocating some arrays we'll need later
+    double* rowLimits = (double*)malloc(sizeof(double) * 2);
+    double* zAtLimits = (double*)malloc(sizeof(double) * 2);
+    double** colorsAtLimits = (double**)malloc(sizeof(double*) * 2); //2x3 array
+    for (int i = 0; i < 2; i++)
+        colorsAtLimits[i] = (double*)malloc(sizeof(double) * 3);
        
-    std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file
-    std::vector<Triangle> triangles; //triangles we're actually gonna use
 
-
-    Camera cam = GetCamera(0, 1000);
-
-    Matrix camTrans = cam.CameraTransform();
-
-    Matrix viewTrans = cam.ViewTransform();
-
-    Matrix devTrans = cam.DeviceTransform();
-
-    Matrix composite = Matrix::ComposeMatrices(Matrix::ComposeMatrices(camTrans, viewTrans), devTrans);
-
-
-    //loop though each triangle read from file and add two generated triangles to triangles
-    for (int t = 0; t < readTriangles.size(); t++)
+    //for each of the camera's four perspectives
+    for (int f = 0; f < 4; f++)
     {
-        readTriangles[t].renderToDeviceSpace(composite);
+        std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file. Re-reading adds extra io, so this could be improved
+        std::vector<Triangle> triangles; //triangles we're actually gonna use. 
 
-        readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
+        Camera cam = GetCamera(f * 250, 1000);
 
-        double slopeBetweenExtremeXs = (readTriangles[t].Y[2] - readTriangles[t].Y[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]); //the slope between the points of highest and lowest x values
-        double zGradientBetweenExtremeXs = (readTriangles[t].Z[2] - readTriangles[t].Z[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]);
-        double colorGradientBetweenExtremeXs[] =
+        Matrix camTrans = cam.CameraTransform();
+        Matrix viewTrans = cam.ViewTransform();
+        Matrix devTrans = cam.DeviceTransform();
+
+        Matrix composite = Matrix::ComposeMatrices(Matrix::ComposeMatrices(camTrans, viewTrans), devTrans); //multiply the three matrices
+
+        //loop though each triangle read from file and add two generated triangles to triangles
+        for (int t = 0; t < readTriangles.size(); t++)
         {
-            (readTriangles[t].colors[2][0] - readTriangles[t].colors[0][0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
-            (readTriangles[t].colors[2][1] - readTriangles[t].colors[0][1]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
-            (readTriangles[t].colors[2][2] - readTriangles[t].colors[0][2]) / (readTriangles[t].X[2] - readTriangles[t].X[0])
-        };
+            readTriangles[t].renderToDeviceSpace(composite); //adjust the points for this triangle according to the total matrix
 
-        //the new point has the x of our midrange existing point.
-        //y of new pt = y of leftmost point + slope between the leftmost and rightmost points * num of steps between leftmost's x and new pt's x
-        double newPoint[] =
-        {
-            readTriangles[t].X[1],
-            readTriangles[t].Y[0] + slopeBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-            readTriangles[t].Z[0] + zGradientBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-            readTriangles[t].colors[0][0] + colorGradientBetweenExtremeXs[0] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-            readTriangles[t].colors[0][1] + colorGradientBetweenExtremeXs[1] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-            readTriangles[t].colors[0][2] + colorGradientBetweenExtremeXs[2] * (readTriangles[t].X[1] - readTriangles[t].X[0])
-         };
+            readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
+
+            double slopeBetweenExtremeXs = (readTriangles[t].Y[2] - readTriangles[t].Y[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]); //the slope between the points of highest and lowest x values
+            double zGradientBetweenExtremeXs = (readTriangles[t].Z[2] - readTriangles[t].Z[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]);
+            double colorGradientBetweenExtremeXs[] =
+            {
+                (readTriangles[t].colors[2][0] - readTriangles[t].colors[0][0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
+                (readTriangles[t].colors[2][1] - readTriangles[t].colors[0][1]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
+                (readTriangles[t].colors[2][2] - readTriangles[t].colors[0][2]) / (readTriangles[t].X[2] - readTriangles[t].X[0])
+            };
+
+            //the new point has the x of our midrange existing point.
+            //y of new pt = y of leftmost point + slope between the leftmost and rightmost points * num of steps between leftmost's x and new pt's x
+            double newPoint[] =
+            {
+                readTriangles[t].X[1],
+                readTriangles[t].Y[0] + slopeBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0]),
+                readTriangles[t].Z[0] + zGradientBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0]),
+                readTriangles[t].colors[0][0] + colorGradientBetweenExtremeXs[0] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
+                readTriangles[t].colors[0][1] + colorGradientBetweenExtremeXs[1] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
+                readTriangles[t].colors[0][2] + colorGradientBetweenExtremeXs[2] * (readTriangles[t].X[1] - readTriangles[t].X[0])
+            };
 
 
-        //putting together and pushing the two triangles before iterating through the loop again
-        Triangle leftTriangle;
-        leftTriangle.X[0] = readTriangles[t].X[0];
-        leftTriangle.Y[0] = readTriangles[t].Y[0];
-        leftTriangle.Z[0] = readTriangles[t].Z[0];
-        leftTriangle.colors[0][0] = readTriangles[t].colors[0][0];
-        leftTriangle.colors[0][1] = readTriangles[t].colors[0][1];
-        leftTriangle.colors[0][2] = readTriangles[t].colors[0][2];
+            //putting together and pushing the two triangles before iterating through the loop again
+            Triangle leftTriangle;
+            leftTriangle.X[0] = readTriangles[t].X[0];
+            leftTriangle.Y[0] = readTriangles[t].Y[0];
+            leftTriangle.Z[0] = readTriangles[t].Z[0];
+            leftTriangle.colors[0][0] = readTriangles[t].colors[0][0];
+            leftTriangle.colors[0][1] = readTriangles[t].colors[0][1];
+            leftTriangle.colors[0][2] = readTriangles[t].colors[0][2];
 
-        leftTriangle.X[1] = readTriangles[t].X[1];
-        leftTriangle.Y[1] = readTriangles[t].Y[1];
-        leftTriangle.Z[1] = readTriangles[t].Z[1];
-        leftTriangle.colors[1][0] = readTriangles[t].colors[1][0];
-        leftTriangle.colors[1][1] = readTriangles[t].colors[1][1];
-        leftTriangle.colors[1][2] = readTriangles[t].colors[1][2];
+            leftTriangle.X[1] = readTriangles[t].X[1];
+            leftTriangle.Y[1] = readTriangles[t].Y[1];
+            leftTriangle.Z[1] = readTriangles[t].Z[1];
+            leftTriangle.colors[1][0] = readTriangles[t].colors[1][0];
+            leftTriangle.colors[1][1] = readTriangles[t].colors[1][1];
+            leftTriangle.colors[1][2] = readTriangles[t].colors[1][2];
 
-        leftTriangle.X[2] = newPoint[0];
-        leftTriangle.Y[2] = newPoint[1];
-        leftTriangle.Z[2] = newPoint[2];
-        leftTriangle.colors[2][0] = newPoint[3];
-        leftTriangle.colors[2][1] = newPoint[4];
-        leftTriangle.colors[2][2] = newPoint[5];
+            leftTriangle.X[2] = newPoint[0];
+            leftTriangle.Y[2] = newPoint[1];
+            leftTriangle.Z[2] = newPoint[2];
+            leftTriangle.colors[2][0] = newPoint[3];
+            leftTriangle.colors[2][1] = newPoint[4];
+            leftTriangle.colors[2][2] = newPoint[5];
 
-        triangles.push_back(leftTriangle);
+            triangles.push_back(leftTriangle);
 
-        Triangle rightTriangle;
-        rightTriangle.X[0] = readTriangles[t].X[1];
-        rightTriangle.Y[0] = readTriangles[t].Y[1];
-        rightTriangle.Z[0] = readTriangles[t].Z[1];
-        rightTriangle.colors[0][0] = readTriangles[t].colors[1][0];
-        rightTriangle.colors[0][1] = readTriangles[t].colors[1][1];
-        rightTriangle.colors[0][2] = readTriangles[t].colors[1][2];
+            Triangle rightTriangle;
+            rightTriangle.X[0] = readTriangles[t].X[1];
+            rightTriangle.Y[0] = readTriangles[t].Y[1];
+            rightTriangle.Z[0] = readTriangles[t].Z[1];
+            rightTriangle.colors[0][0] = readTriangles[t].colors[1][0];
+            rightTriangle.colors[0][1] = readTriangles[t].colors[1][1];
+            rightTriangle.colors[0][2] = readTriangles[t].colors[1][2];
 
-        rightTriangle.X[1] = newPoint[0];
-        rightTriangle.Y[1] = newPoint[1];
-        rightTriangle.Z[1] = newPoint[2];
-        rightTriangle.colors[1][0] = newPoint[3];
-        rightTriangle.colors[1][1] = newPoint[4];
-        rightTriangle.colors[1][2] = newPoint[5];
+            rightTriangle.X[1] = newPoint[0];
+            rightTriangle.Y[1] = newPoint[1];
+            rightTriangle.Z[1] = newPoint[2];
+            rightTriangle.colors[1][0] = newPoint[3];
+            rightTriangle.colors[1][1] = newPoint[4];
+            rightTriangle.colors[1][2] = newPoint[5];
 
-        rightTriangle.X[2] = readTriangles[t].X[2];
-        rightTriangle.Y[2] = readTriangles[t].Y[2];
-        rightTriangle.Z[2] = readTriangles[t].Z[2];
-        rightTriangle.colors[2][0] = readTriangles[t].colors[2][0];
-        rightTriangle.colors[2][1] = readTriangles[t].colors[2][1];
-        rightTriangle.colors[2][2] = readTriangles[t].colors[2][2];
+            rightTriangle.X[2] = readTriangles[t].X[2];
+            rightTriangle.Y[2] = readTriangles[t].Y[2];
+            rightTriangle.Z[2] = readTriangles[t].Z[2];
+            rightTriangle.colors[2][0] = readTriangles[t].colors[2][0];
+            rightTriangle.colors[2][1] = readTriangles[t].colors[2][1];
+            rightTriangle.colors[2][2] = readTriangles[t].colors[2][2];
 
-        triangles.push_back(rightTriangle);
+            triangles.push_back(rightTriangle);
 
-    }
+        }
 
-    //for (int f = 0; f <= 4; f++)
-    {
+        //"zeroing" our buffers
+        for (int i = 0; i < 1000 * 1000 * 3; i++)
+            buffer[i] = 0;
 
-        Screen screen;
-        screen.buffer = buffer;
-        screen.width = 1000;
-        screen.height = 1000;
-
-        double* rowLimits = (double*)malloc(sizeof(double) * 2);
-        double* zAtLimits = (double*)malloc(sizeof(double) * 2);
-        double** colorsAtLimits = (double**)malloc(sizeof(double*) * 2); //2x3 array
-        for (int i = 0; i < 2; i++)
-            colorsAtLimits[i] = (double*)malloc(sizeof(double) * 3);
-
+        for (int i = 0; i < 1000 * 1000; i++)
+            zBuffer[i] = -1.f;
 
         //looping through our generated triangles
         for (int t = 0; t < triangles.size(); t++)
@@ -787,14 +774,18 @@ int main()
             }
         }
 
-        free(rowLimits);
-        free(zAtLimits);
-        for (int i = 0; i < 2; i++)
-            free(colorsAtLimits[i]);
-        free(colorsAtLimits);
-
-        WriteImage(image, "frame000");
+        //set up the filename and write
+        char outputName[10];
+        std::sprintf(outputName, "frame%03d", f * 250);
+        WriteImage(image, outputName);
     }
 
+    free(rowLimits);
+    free(zAtLimits);
+    for (int i = 0; i < 2; i++)
+        free(colorsAtLimits[i]);
+    free(colorsAtLimits);  
+    free(zBuffer);
+    
     return 0;
 }
