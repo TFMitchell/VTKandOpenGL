@@ -262,7 +262,7 @@ public:
     double bottomSlope, bottomRGBGradient[3], bottomZGradient, bottomStartPt[6]; //[6] is { X, Y, Z, R, G, B }
     double topSlope, topRGBGradient[3], topZGradient, topStartPt[6];
 
-    void renderToDeviceSpace(Matrix transformation)
+    void transform(Matrix transformation)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -423,7 +423,7 @@ public:
         }
     }
 
-    void getRowBounds(int column, double* rowLimits, double** colorsAtLimits, double* zAtLimits) //for a given column to scan, get back the rows between which we need to fill in, the colors at those endpoints,
+    void getRowBounds(double column, double* rowLimits, double** colorsAtLimits, double* zAtLimits) //for a given column to scan, get back the rows between which we need to fill in, the colors at those endpoints,
                                                                                                   //and the z values at the endpoints. Make sure to run the above funtion first
     {
         rowLimits[0] = bottomStartPt[1] + bottomSlope * (column - bottomStartPt[0]);
@@ -643,14 +643,14 @@ int main()
 
         Matrix camTrans = cam.CameraTransform();
         Matrix viewTrans = cam.ViewTransform();
+        Matrix viewSpace = Matrix::ComposeMatrices(camTrans, viewTrans); //multiply
         Matrix devTrans = cam.DeviceTransform();
 
-        Matrix composite = Matrix::ComposeMatrices(Matrix::ComposeMatrices(camTrans, viewTrans), devTrans); //multiply the three matrices
 
         //loop though each triangle read from file and add two generated triangles to triangles
         for (int t = 0; t < readTriangles.size(); t++)
         {
-            readTriangles[t].renderToDeviceSpace(composite); //adjust the points for this triangle according to the total matrix
+            readTriangles[t].transform(viewSpace); //adjust the points for this triangle according to the total matrix
 
             readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
 
@@ -737,21 +737,28 @@ int main()
         //looping through our generated triangles
         for (int t = 0; t < triangles.size(); t++)
         {
+            //triangles[t].transform(devTrans);
             triangles[t].prepare(); //compute the slopes/other info necessary to get the row bounds for each scanline
 
             //each scanline (columns)
-            for (int scanPosition = ceil__441(triangles[t].X[0]); scanPosition <= floor__441(triangles[t].X[2]); scanPosition++)
+            for (int scanPosition = ceil__441(500.f + 500.f *(triangles[t].X[0])); scanPosition <= floor__441(500.f + 500.f * triangles[t].X[2]); scanPosition++)
             {
+                
                 //oob check
                 if (scanPosition >= screen.width
                     || scanPosition < 0)
                     continue;
 
-                triangles[t].getRowBounds(scanPosition, rowLimits, colorsAtLimits, zAtLimits); //get the min and max rows we need to add to the screen buffer
+                triangles[t].getRowBounds(((double)scanPosition - 500.f) / 500.f, rowLimits, colorsAtLimits, zAtLimits); //get the min and max rows we need to add to the screen buffer
+
+
+                int startingRow = ceil__441(500.f + 500.f * rowLimits[0]);
+                int finishingRow = floor__441(500.f + 500.f * rowLimits[1]);
+
 
                 //fill in the pixels by row (for each column scan)
-                for (int currentRow = ceil__441(rowLimits[0]);
-                    currentRow <= floor__441(rowLimits[1]);
+                for (int currentRow = startingRow;
+                    currentRow <= finishingRow;
                     currentRow++)
                 {
                     //oob check
@@ -760,16 +767,16 @@ int main()
                         continue;
 
                     //stop if this point is hidden
-                    double zValue = zAtLimits[0] + (zAtLimits[1] - zAtLimits[0]) * ((double)currentRow - rowLimits[0]) / ((double)rowLimits[1] - rowLimits[0]);
+                    double zValue = zAtLimits[0] + (zAtLimits[1] - zAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
                     if (zValue < zBuffer[currentRow * screen.width + scanPosition])
                         continue;
 
                     zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer              
 
                     //set this pixel's color
-                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = ceil__441((colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
-                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 1] = ceil__441((colorsAtLimits[0][1] + (colorsAtLimits[1][1] - colorsAtLimits[0][1]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
-                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 2] = ceil__441((colorsAtLimits[0][2] + (colorsAtLimits[1][2] - colorsAtLimits[0][2]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
+                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = ceil__441((colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
+                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 1] = ceil__441((colorsAtLimits[0][1] + (colorsAtLimits[1][1] - colorsAtLimits[0][1]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
+                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 2] = ceil__441((colorsAtLimits[0][2] + (colorsAtLimits[1][2] - colorsAtLimits[0][2]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f);
                 }
             }
         }
