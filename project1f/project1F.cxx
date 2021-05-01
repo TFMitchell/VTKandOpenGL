@@ -54,9 +54,6 @@ public:
     void            Print(ostream& o);
 };
 
-LightingParameters lp;
-
-
 static void normalize(double* myVector) //normalizes a vector in the form of a double with three elements
 {
     double magnitude = sqrt(pow(myVector[0], 2) + pow(myVector[1], 2) + pow(myVector[2], 2));
@@ -66,42 +63,11 @@ static void normalize(double* myVector) //normalizes a vector in the form of a d
 }
 
 
-
-
-/*
-double CalculatePhongShading(LightingParameters& lp, double* viewDirection, double* normal)
+double CalculateDiffuseShading(double* normal, LightingParameters lp)
 {
-    //return lp.Ka;
-    double lightDirection[] =
-    {
-        lp.lightDir[0],
-        lp.lightDir[1],
-        lp.lightDir[2]
-    };
 
-    normalize(lightDirection);
-
-    return std::max((double) 0.f,  lightDirection[0] * normal[0] + lightDirection[1] * normal[1] +  lightDirection[2] * normal[2]) * lp.Kd;
-}*/
-
-
-double CalculateDiffuseShading(double X, double Y, double Z, double* normal)
-{
-    //cout << "Calculating shader with these points " << X << " " << Y << " " << Z << endl;
-    //cout << "And these normals " << normal[0] << " " << normal[1] << " " << normal[2] << endl;
-
-    double lightDirection[] =
-    {
-        lp.lightDir[0] - X,
-        lp.lightDir[1] - Y,
-        lp.lightDir[2] - Z
-    };
-
-    normalize(lightDirection);
-
-    return (lightDirection[0] * normal[0] + lightDirection[1] * normal[1] + lightDirection[2] * normal[2])* lp.Kd;
+    return (lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2]) * lp.Kd;
 }
-
 
 
 
@@ -215,35 +181,6 @@ public:
 
         return rv;
     };
-
-    Matrix DeviceTransform(void) //get the deviceTransform matrix. This is hardcoded for a 1000x1000 output
-    { 
-        Matrix rv;
-
-        rv.A[0][0] = 500.f;
-        rv.A[0][1] = 0.f;
-        rv.A[0][2] = 0.f;
-        rv.A[0][3] = 0.f;
-
-        rv.A[1][0] = 0.f;
-        rv.A[1][1] = 500.f;
-        rv.A[1][2] = 0.f;
-        rv.A[1][3] = 0.f;
-
-        rv.A[2][0] = 0.f;
-        rv.A[2][1] = 0.f;
-        rv.A[2][2] = 1.f;
-        rv.A[2][3] = 0.f;
-
-        rv.A[3][0] = 500.f;
-        rv.A[3][1] = 500.f;
-        rv.A[3][2] = 0.f;
-        rv.A[3][3] = 1.f;
-
-        return rv;
-    };
-
-
 };
 
 
@@ -441,7 +378,7 @@ public:
         }
     }
 
-    void prepare() //run this before using getRowBounds()
+    void prepare(LightingParameters lp) //run this before using getRowBounds()
     {
         //determine the points with matching x values, as well as the point with a unique x
 
@@ -458,7 +395,7 @@ public:
             bottomStartPt[3] = colors[0][0];
             bottomStartPt[4] = colors[0][1];
             bottomStartPt[5] = colors[0][2];
-            bottomStartPt[6] = CalculateDiffuseShading(X[0], Y[0], Z[0], normals[0]);
+            bottomStartPt[6] = CalculateDiffuseShading(normals[0], lp);
             bottomStartPt[7] = 0.f;
 
 
@@ -469,7 +406,7 @@ public:
             bottomRGBGradient[1] = (colors[idxLowYPt][1] - colors[0][1]) / (X[idxLowYPt] - X[0]);
             bottomRGBGradient[2] = (colors[idxLowYPt][2] - colors[0][2]) / (X[idxLowYPt] - X[0]);
 
-            bottomDiffuseGradient = (CalculateDiffuseShading(X[idxLowYPt], Y[idxLowYPt], Z[idxLowYPt], normals[idxLowYPt]) - bottomStartPt[6]) / (X[idxLowYPt] - X[0]);
+            bottomDiffuseGradient = (CalculateDiffuseShading(normals[idxLowYPt], lp) - bottomStartPt[6]) / (X[idxLowYPt] - X[0]);
 
             //the point of the highest y
             int idxHighPt = 1;
@@ -482,7 +419,7 @@ public:
             topStartPt[3] = colors[0][0];
             topStartPt[4] = colors[0][1];
             topStartPt[5] = colors[0][2];
-            topStartPt[6] = CalculateDiffuseShading(X[0], Y[0], Z[0], normals[0]);
+            topStartPt[6] = CalculateDiffuseShading(normals[0], lp);
             topStartPt[7] = 0.f;
 
 
@@ -493,7 +430,7 @@ public:
             topRGBGradient[1] = (colors[idxHighPt][1] - colors[0][1]) / (X[idxHighPt] - X[0]);
             topRGBGradient[2] = (colors[idxHighPt][2] - colors[0][2]) / (X[idxHighPt] - X[0]);
 
-            topDiffuseGradient = (CalculateDiffuseShading(X[idxHighPt], Y[idxHighPt], Z[idxHighPt], normals[idxHighPt]) - topStartPt[6]) / (X[idxHighPt] - X[0]);
+            topDiffuseGradient = (CalculateDiffuseShading(normals[idxHighPt], lp) - topStartPt[6]) / (X[idxHighPt] - X[0]);
         }
 
         else //(X[2] != X[0] && X[2] != X[1]) //right-pointing triangle
@@ -509,7 +446,7 @@ public:
             bottomStartPt[3] = colors[idxLowYPt][0];
             bottomStartPt[4] = colors[idxLowYPt][1];
             bottomStartPt[5] = colors[idxLowYPt][2];
-            bottomStartPt[6] = CalculateDiffuseShading(X[idxLowYPt], Y[idxLowYPt], Z[idxLowYPt], normals[idxLowYPt]);
+            bottomStartPt[6] = CalculateDiffuseShading(normals[idxLowYPt], lp);
             bottomStartPt[7] = 0.f;
 
             bottomSlope = (Y[2] - Y[idxLowYPt]) / (X[2] - X[idxLowYPt]);
@@ -519,7 +456,7 @@ public:
             bottomRGBGradient[1] = (colors[2][1] - colors[idxLowYPt][1]) / (X[2] - X[idxLowYPt]);
             bottomRGBGradient[2] = (colors[2][2] - colors[idxLowYPt][2]) / (X[2] - X[idxLowYPt]);
 
-            bottomDiffuseGradient = (CalculateDiffuseShading(X[2], Y[2], Z[2], normals[2]) - bottomStartPt[6]) / (X[2] - X[idxLowYPt]);
+            bottomDiffuseGradient = (CalculateDiffuseShading(normals[2], lp) - bottomStartPt[6]) / (X[2] - X[idxLowYPt]);
 
             int idxHighPt = 0;
             if (idxLowYPt == 0)
@@ -531,7 +468,7 @@ public:
             topStartPt[3] = colors[idxHighPt][0];
             topStartPt[4] = colors[idxHighPt][1];
             topStartPt[5] = colors[idxHighPt][2];
-            topStartPt[6] = CalculateDiffuseShading(X[idxHighPt], Y[idxHighPt], Z[idxHighPt], normals[idxHighPt]);
+            topStartPt[6] = CalculateDiffuseShading(normals[idxHighPt], lp);
             topStartPt[7] = 0.f;
 
             topSlope = (Y[2] - Y[idxHighPt]) / (X[2] - X[idxHighPt]);
@@ -541,30 +478,30 @@ public:
             topRGBGradient[1] = (colors[2][1] - colors[idxHighPt][1]) / (X[2] - X[idxHighPt]);
             topRGBGradient[2] = (colors[2][2] - colors[idxHighPt][2]) / (X[2] - X[idxHighPt]);
 
-            topDiffuseGradient = (CalculateDiffuseShading(X[2], Y[2], Z[2], normals[2]) - topStartPt[6]) / (X[2] - X[idxHighPt]);
+            topDiffuseGradient = (CalculateDiffuseShading(normals[2], lp) - topStartPt[6]) / (X[2] - X[idxHighPt]);
         }
     }
 
-    void getRowBounds(int column, double* rowLimits, double** colorsAtLimits, double* diffuseShaderAtLimits, double* zAtLimits) //for a given column to scan, get back the rows between which we need to fill in, the colors at those endpoints,
+    void getRowBounds(double column, double* rowLimits, double** colorsAtLimits, double* diffuseShaderAtLimits, double* zAtLimits) //for a given column to scan, get back the rows between which we need to fill in, the colors at those endpoints,
                                                                                                   //and the z values at the endpoints. Make sure to run the above funtion first
     {
         rowLimits[0] = bottomStartPt[1] + bottomSlope * (column - bottomStartPt[0]);
         rowLimits[1] = topStartPt[1] + topSlope * (column - topStartPt[0]);
 
-        colorsAtLimits[0][0] = bottomStartPt[3] + bottomRGBGradient[0] * ((double)column - bottomStartPt[0]);
-        colorsAtLimits[0][1] = bottomStartPt[4] + bottomRGBGradient[1] * ((double)column - bottomStartPt[0]);
-        colorsAtLimits[0][2] = bottomStartPt[5] + bottomRGBGradient[2] * ((double)column - bottomStartPt[0]);
+        colorsAtLimits[0][0] = bottomStartPt[3] + bottomRGBGradient[0] * (column - bottomStartPt[0]);
+        colorsAtLimits[0][1] = bottomStartPt[4] + bottomRGBGradient[1] * (column - bottomStartPt[0]);
+        colorsAtLimits[0][2] = bottomStartPt[5] + bottomRGBGradient[2] * (column - bottomStartPt[0]);
 
-        colorsAtLimits[1][0] = topStartPt[3] + topRGBGradient[0] * ((double)column - topStartPt[0]);
-        colorsAtLimits[1][1] = topStartPt[4] + topRGBGradient[1] * ((double)column - topStartPt[0]);
-        colorsAtLimits[1][2] = topStartPt[5] + topRGBGradient[2] * ((double)column - topStartPt[0]);
+        colorsAtLimits[1][0] = topStartPt[3] + topRGBGradient[0] * (column - topStartPt[0]);
+        colorsAtLimits[1][1] = topStartPt[4] + topRGBGradient[1] * (column - topStartPt[0]);
+        colorsAtLimits[1][2] = topStartPt[5] + topRGBGradient[2] * (column - topStartPt[0]);
 
-        diffuseShaderAtLimits[0] = bottomStartPt[6] + bottomDiffuseGradient * ((double)column - bottomStartPt[0]);
+        diffuseShaderAtLimits[0] = bottomStartPt[6] + bottomDiffuseGradient * (column - bottomStartPt[0]);
 
-        diffuseShaderAtLimits[1] = topStartPt[6] + topDiffuseGradient * ((double)column - topStartPt[0]);
+        diffuseShaderAtLimits[1] = topStartPt[6] + topDiffuseGradient * (column - topStartPt[0]);
 
-        zAtLimits[0] = bottomStartPt[2] + bottomZGradient * ((double)column - bottomStartPt[0]);
-        zAtLimits[1] = topStartPt[2] + topZGradient * ((double)column - topStartPt[0]);
+        zAtLimits[0] = bottomStartPt[2] + bottomZGradient * (column - bottomStartPt[0]);
+        zAtLimits[1] = topStartPt[2] + topZGradient * (column - topStartPt[0]);
     }
 };
 
@@ -675,28 +612,6 @@ GetTriangles(void)
 }
 
 
-void
-Matrix::TransformPoint(const double* ptIn, double* ptOut)
-{
-    ptOut[0] = ptIn[0] * A[0][0]
-        + ptIn[1] * A[1][0]
-        + ptIn[2] * A[2][0]
-        + ptIn[3] * A[3][0];
-    ptOut[1] = ptIn[0] * A[0][1]
-        + ptIn[1] * A[1][1]
-        + ptIn[2] * A[2][1]
-        + ptIn[3] * A[3][1];
-    ptOut[2] = ptIn[0] * A[0][2]
-        + ptIn[1] * A[1][2]
-        + ptIn[2] * A[2][2]
-        + ptIn[3] * A[3][2];
-    ptOut[3] = ptIn[0] * A[0][3]
-        + ptIn[1] * A[1][3]
-        + ptIn[2] * A[2][3]
-        + ptIn[3] * A[3][3];
-}
-
-
 double ceil__441(double f)
 {
     return ceil(f - 0.00001);
@@ -738,19 +653,6 @@ WriteImage(vtkImageData* img, const char* filename)
     writer->Delete();
 }
 
-static void transformToDeviceSpace(Matrix transformation, double* points)
-{
-    double newX, newY, newZ;
-    newX = transformation.A[0][0] * points[0] + transformation.A[1][0] * points[1] + transformation.A[2][0] * points[2] + transformation.A[3][0];
-    newY = transformation.A[0][1] * points[0] + transformation.A[1][1] * points[1] + transformation.A[2][1] * points[2] + transformation.A[3][1];
-    newZ = transformation.A[0][2] * points[0] + transformation.A[1][2] * points[1] + transformation.A[2][2] * points[2] + transformation.A[3][2];
-    double W = transformation.A[0][3] * points[0] + transformation.A[1][3] * points[1] + transformation.A[2][3] * points[2] + transformation.A[3][3];
-
-    points[0] = newX / W;
-    points[1] = newY / W;
-    points[2] = newZ / W;
-}
-
 
 int main()
 {
@@ -772,7 +674,6 @@ int main()
         colorsAtLimits[i] = (double*)malloc(sizeof(double) * 3);
     double* diffuseShaderAtLimits = (double*)malloc(sizeof(double) * 2); 
 
-    
 
 
     //for each of the camera's four perspectives
@@ -783,12 +684,11 @@ int main()
 
         Camera cam = GetCamera(f * 250, 1000);
 
+        LightingParameters lp = GetLighting(cam);
+
         Matrix camTrans = cam.CameraTransform();
         Matrix viewTrans = cam.ViewTransform();
-        Matrix devTrans = cam.DeviceTransform();
-
         Matrix viewSpace = Matrix::ComposeMatrices(camTrans, viewTrans); //multiply the three matrices
-
 
         //loop though each triangle read from file and add two generated triangles to triangles
         for (int t = 0; t < readTriangles.size(); t++)
@@ -909,25 +809,22 @@ int main()
         //looping through our generated triangles
         for (int t = 0; t < triangles.size(); t++)
         {
-            int startingScan = ceil__441(triangles[t].X[0]);
-            int finishingScan = floor__441(triangles[t].X[2]);
-            triangles[t].prepare(); //compute the slopes/other info necessary to get the row bounds for each scanline
+            triangles[t].prepare(lp); //compute the slopes/other info necessary to get the row bounds for each scanline
 
-            triangles[t].transform(devTrans);
-
-            //each scanline (columns)
-            for (int scanPosition = startingScan; scanPosition <= finishingScan; scanPosition++)
+            for (int scanPosition = ceil__441(500.f + 500.f * (triangles[t].X[0]));
+                scanPosition <= floor__441(500.f + 500.f * triangles[t].X[2]);
+                scanPosition++)
             {
                 //oob check
                 if (scanPosition >= screen.width
                     || scanPosition < 0)
                     continue;
 
-                triangles[t].getRowBounds(scanPosition, rowLimits, colorsAtLimits, diffuseShaderAtLimits, zAtLimits); //get the min and max rows we need to add to the screen buffer
+                triangles[t].getRowBounds(((double)scanPosition - 500.f) / 500.f, rowLimits, colorsAtLimits, diffuseShaderAtLimits, zAtLimits); //get the min and max rows we need to add to the screen buffer
 
                 //fill in the pixels by row (for each column scan)
-                for (int currentRow = ceil__441(rowLimits[0]);
-                    currentRow <= floor__441(rowLimits[1]);
+                for (int currentRow = ceil__441(500.f + 500.f * rowLimits[0]);
+                    currentRow <= floor__441(500.f + 500.f * rowLimits[1]);
                     currentRow++)
                 {
                     //oob check
@@ -936,20 +833,18 @@ int main()
                         continue;
 
                     //stop if this point is hidden
-                    double zValue = zAtLimits[0] + (zAtLimits[1] - zAtLimits[0]) * ((double)currentRow - rowLimits[0]) / ((double)rowLimits[1] - rowLimits[0]);
+                    double zValue = zAtLimits[0] + (zAtLimits[1] - zAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
                     if (zValue < zBuffer[currentRow * screen.width + scanPosition])
                         continue;
 
                     zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer         
 
-
-                    double shade = std::max((double) 0.f, diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0]));
-
+                    double shade = std::max((double) 0.f, diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]));
 
                     //set this pixel's color
-                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = ceil__441(std::min(shade * (colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])), (double)1.f) * 255.f);
-                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 1] = ceil__441(std::min(shade * (colorsAtLimits[0][1] + (colorsAtLimits[1][1] - colorsAtLimits[0][1]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])), (double)1.f) * 255.f);
-                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 2] = ceil__441(std::min(shade * (colorsAtLimits[0][2] + (colorsAtLimits[1][2] - colorsAtLimits[0][2]) * ((double)currentRow - rowLimits[0]) / (rowLimits[1] - rowLimits[0])), (double)1.f) * 255.f);
+                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = ceil__441(std::min(shade * (colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])), (double)1.f) * 255.f);
+                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 1] = ceil__441(std::min(shade * (colorsAtLimits[0][1] + (colorsAtLimits[1][1] - colorsAtLimits[0][1]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])), (double)1.f) * 255.f);
+                    buffer[currentRow * screen.width * 3 + scanPosition * 3 + 2] = ceil__441(std::min(shade * (colorsAtLimits[0][2] + (colorsAtLimits[1][2] - colorsAtLimits[0][2]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])), (double)1.f) * 255.f);
                 }
             }
         }
