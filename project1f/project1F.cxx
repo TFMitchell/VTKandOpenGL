@@ -34,15 +34,13 @@ struct LightingParameters
         alpha = 50.5;
     };
 
-
     double lightDir[3]; // The direction of the light source
     double Ka;          // The coefficient for ambient lighting
     double Kd;          // The coefficient for diffuse lighting
     double Ks;          // The coefficient for specular lighting
     double alpha;       // The exponent term for specular lighting
-
-
 };
+
 
 class Matrix
 {
@@ -64,8 +62,8 @@ static void normalize(double* myVector) //normalizes a vector in the form of a d
 
 double CalculateDiffuseShading(double* normal, LightingParameters lp)
 {
-
-    return (lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2]) * lp.Kd;
+    //return (lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2]) * lp.Kd;
+    return std::max((double) 0.f, (lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2]) * lp.Kd);
 }
 
 double CalculateSpecularShading(double* normal, double* viewDirection, LightingParameters lp)
@@ -82,8 +80,6 @@ double CalculateSpecularShading(double* normal, double* viewDirection, LightingP
     };
 
     normalize(R);
-
-    //cout <<"specularShader redurning " << lp.Ks * std::pow(viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2], lp.alpha) <<endl;
 
     return lp.Ks * std::pow(viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2], lp.alpha);
 }
@@ -124,7 +120,6 @@ public:
 
         return rv;
     };
-
     
 
     Matrix CameraTransform(void) //get the cameraTransform matrix
@@ -301,6 +296,7 @@ public:
     double         Z[3];
     double colors[3][3];
     double normals[3][3];
+    double diffuseShaders[3];
 
     //store these as member variables to reduce the number of calculations needed
     double bottomSlope, bottomRGBGradient[3], bottomDiffuseGradient, bottomSpecularGradient, bottomZGradient, bottomStartPt[8]; //[8] is { X, Y, Z, R, G, B, diffuse, specular }
@@ -548,7 +544,6 @@ public:
             viewDirection[2] = c.position[2] - Z[2];
 
             topSpecularGradient = (CalculateSpecularShading(normals[2], viewDirection, lp) - topStartPt[7]) / (X[2] - X[idxHighPt]);
-
         }
     }
 
@@ -749,7 +744,7 @@ int main()
 
 
     //for each of the camera's four perspectives
-    for (int f = 0; f < 4; f++)
+    for (int f = 0; f < 1; f++)
     {
         std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file. Re-reading adds extra io, so this could be improved
         std::vector<Triangle> triangles; //triangles we're actually gonna use. 
@@ -761,6 +756,8 @@ int main()
         Matrix camTrans = cam.CameraTransform();
         Matrix viewTrans = cam.ViewTransform();
         Matrix viewSpace = Matrix::ComposeMatrices(camTrans, viewTrans); //multiply the three matrices
+
+        //lightTransform(&lp, viewTrans);
 
         //loop though each triangle read from file and add two generated triangles to triangles
         for (int t = 0; t < readTriangles.size(); t++)
@@ -785,6 +782,7 @@ int main()
                 (readTriangles[t].normals[2][1] - readTriangles[t].normals[0][1]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
                 (readTriangles[t].normals[2][2] - readTriangles[t].normals[0][2]) / (readTriangles[t].X[2] - readTriangles[t].X[0])
             };
+
 
             //the new point has the x of our midrange existing point.
             //y of new pt = y of leftmost point + slope between the leftmost and rightmost points * num of steps between leftmost's x and new pt's x
@@ -868,7 +866,6 @@ int main()
             rightTriangle.normals[2][2] = readTriangles[t].normals[2][2];
 
             triangles.push_back(rightTriangle);
-
         }
 
         //"zeroing" our buffers
@@ -911,10 +908,28 @@ int main()
 
                     zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer         
 
-                    //double shade = std::max((double) 0.f, diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) + lp.Ka;
+                    double shade = diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    
                     //double shade = std::abs(diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]));
                     //double shade = lp.Ka;
-                    double shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    //double shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+
+                    if (currentRow == 251 && scanPosition == 387
+                        || currentRow == 283 && scanPosition == 361
+                        || currentRow == 481 && scanPosition == 514)
+                    {
+                        cout << "at " << scanPosition << " " << currentRow << endl;
+                        cout << "started at " << ceil__441(500.f + 500.f * rowLimits[0]) <<" now we're at "<< currentRow<<" out of " << floor__441(500.f + 500.f * rowLimits[1]) << endl;
+                        cout << "original colors are " << endl;
+                        cout << std::min((int)ceil__441((colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255) << endl;
+                        cout << std::min((int)ceil__441((colorsAtLimits[0][1] + (colorsAtLimits[1][1] - colorsAtLimits[0][1]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255) << endl;
+                        cout << std::min((int)ceil__441((colorsAtLimits[0][2] + (colorsAtLimits[1][2] - colorsAtLimits[0][2]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255) << endl;
+                        cout << "limits of shade are " << diffuseShaderAtLimits[0] << " and " << diffuseShaderAtLimits[1] << endl;
+                        cout << "Shade is " << diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]) <<endl;
+                        cout << std::min((int)ceil__441((shade * colorsAtLimits[0][0] + shade * (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255) << endl;
+                        cout << std::min((int)ceil__441((shade * colorsAtLimits[0][1] + shade * (colorsAtLimits[1][1] - colorsAtLimits[0][1]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255) << endl;
+                        cout << std::min((int)ceil__441((shade * colorsAtLimits[0][2] + shade * (colorsAtLimits[1][2] - colorsAtLimits[0][2]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255) << endl;
+                    }
 
                     //set this pixel's color
                     buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = std::min((int)ceil__441(shade * (colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255);
