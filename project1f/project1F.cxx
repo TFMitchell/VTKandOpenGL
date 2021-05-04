@@ -78,9 +78,6 @@ static double CalculateSpecularShading(double* normal, double* viewDirection, Li
 
     normalize(R);
 
-    //cout << "reflection vector " << R[0] << " " << R[1] << " " << R[2] << endl;
-    //cout << "RdotV is " << viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2] << endl;
-
     return std::max((double)0.f, lp.Ks * std::pow(viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2], lp.alpha));
 }
 
@@ -294,6 +291,7 @@ public:
     double         Z[3];
     double colors[3][3];
     double normals[3][3];
+    double viewDirection[3][3];
     double diffuseShaders[3];
     double specularShaders[3];
 
@@ -301,10 +299,16 @@ public:
     double bottomSlope, bottomRGBGradient[3], bottomDiffuseGradient, bottomSpecularGradient, bottomZGradient, bottomStartPt[8]; //[8] is { X, Y, Z, R, G, B, diffuse, specular }
     double topSlope, topRGBGradient[3], topDiffuseGradient, topSpecularGradient, topZGradient, topStartPt[8];
 
-    void transform(Matrix transformation)
-    {
+    void transform(Matrix transformation, Camera cam)
+    {  
         for (int i = 0; i < 3; i++)
         {
+            //preserving the view direction before transforming the position of this vertex on the triangle
+            viewDirection[i][0] = cam.position[0] - X[i];
+            viewDirection[i][1] = cam.position[1] - Y[i];
+            viewDirection[i][2] = cam.position[2] - Z[i];
+
+            //actual transformation with a matrix
             double newX, newY, newZ, W;
             newX = transformation.A[0][0] * X[i] + transformation.A[1][0] * Y[i] + transformation.A[2][0] * Z[i] + transformation.A[3][0];
             newY = transformation.A[0][1] * X[i] + transformation.A[1][1] * Y[i] + transformation.A[2][1] * Z[i] + transformation.A[3][1];
@@ -313,27 +317,16 @@ public:
 
             X[i] = newX / W;
             Y[i] = newY / W;
-            Z[i] = newZ / W;
-        }     
-
-        /*for (int i = 0; i < 3; i++)
-        {
-            double newX, newY, newZ, W;
-            newX = transformation.A[0][0] * normals[i][0] + transformation.A[1][0] * normals[i][1] + transformation.A[2][0] * normals[i][2] + transformation.A[3][0];
-            newY = transformation.A[0][1] * normals[i][0] + transformation.A[1][1] * normals[i][1] + transformation.A[2][1] * normals[i][2] + transformation.A[3][1];
-            newZ = transformation.A[0][2] * normals[i][0] + transformation.A[1][2] * normals[i][1] + transformation.A[2][2] * normals[i][2] + transformation.A[3][2];
-            W = transformation.A[0][3] * normals[i][0] + transformation.A[1][3] * normals[i][1] + transformation.A[2][3] * normals[i][2] + transformation.A[3][3];
-
-            normals[i][0] = newX / W;
-            normals[i][1] = newY / W;
-            normals[i][2] = newZ / W;
-        }*/
+            Z[i] = newZ / W;     
+        }  
     }
 
     void sortPointsByX() //this will sort X[] values (ascending) for this triangle and shuffle the Y[] as well so it matches
                          //using vectors and built-in sorting methods was much too slow for the volume of triangles we're processing, so I had to make this
     {
-        double pointsAndColor[3][9]; //3 points of x, y, z, r, g, b, normals
+        double pointsAndColor[3][9]; //3 points of x, y, z, r, g, b, normals,
+        double views[3][3];
+        double tmpViews[3];
         double tmp[9];
 
         //load our X's and Y's into our working space
@@ -348,6 +341,9 @@ public:
             pointsAndColor[i][6] = normals[i][0];
             pointsAndColor[i][7] = normals[i][1];
             pointsAndColor[i][8] = normals[i][2];
+            views[i][0] = viewDirection[i][0];
+            views[i][1] = viewDirection[i][1];
+            views[i][2] = viewDirection[i][2];
         }
 
         //sorting method
@@ -366,6 +362,9 @@ public:
                     tmp[6] = pointsAndColor[i][6];
                     tmp[7] = pointsAndColor[i][7];
                     tmp[8] = pointsAndColor[i][8];
+                    tmpViews[0] = views[i][0];
+                    tmpViews[1] = views[i][1]; 
+                    tmpViews[2] = views[i][2];
 
                     pointsAndColor[i][0] = pointsAndColor[i + 1][0];
                     pointsAndColor[i][1] = pointsAndColor[i + 1][1];
@@ -376,6 +375,9 @@ public:
                     pointsAndColor[i][6] = pointsAndColor[i + 1][6];
                     pointsAndColor[i][7] = pointsAndColor[i + 1][7];
                     pointsAndColor[i][8] = pointsAndColor[i + 1][8];
+                    views[i][0] = views[i + 1][0];
+                    views[i][1] = views[i + 1][1];
+                    views[i][2] = views[i + 1][2];
                     pointsAndColor[i + 1][0] = tmp[0];
                     pointsAndColor[i + 1][1] = tmp[1];
                     pointsAndColor[i + 1][2] = tmp[2];
@@ -385,6 +387,9 @@ public:
                     pointsAndColor[i + 1][6] = tmp[6];
                     pointsAndColor[i + 1][7] = tmp[7];
                     pointsAndColor[i + 1][8] = tmp[8];
+                    views[i + 1][0] = tmpViews[0];
+                    views[i + 1][1] = tmpViews[1];
+                    views[i + 1][2] = tmpViews[2];
                 }
             }
         }
@@ -401,10 +406,13 @@ public:
             normals[i][0] = pointsAndColor[i][6];
             normals[i][1] = pointsAndColor[i][7];
             normals[i][2] = pointsAndColor[i][8];
+            viewDirection[i][0] = views[i][0];
+            viewDirection[i][1] = views[i][1];
+            viewDirection[i][2] = views[i][2];
         }
     }
 
-    void prepare() //run this before using getRowBounds()
+    void prepare() //run this before using getRowBounds() i.e. for each scan column
     {
         //determine the points with matching x values, as well as the point with a unique x
 
@@ -539,22 +547,14 @@ public:
     {
         for (int i = 0; i < 3; i++)
         {
-            double view[] =
-            {
-                cam.position[0] - X[i],
-                cam.position[1] - Y[i],
-                cam.position[2] - Z[i]
-            };
             diffuseShaders[i] = CalculateDiffuseShading(normals[i], lp);
-            specularShaders[i] = CalculateSpecularShading(normals[i], view, lp);
+            specularShaders[i] = CalculateSpecularShading(normals[i], viewDirection[i], lp);
         }
     }
-
 };
 
-static void rasturize(Triangle inputTriangle, std::vector<Triangle>* appendTo)
+static void rasturize(Triangle inputTriangle, std::vector<Triangle>* appendTo) //get two triangles from a given triangle (the ones that point left and right)
 {
-
     double slopeBetweenExtremeXs = (inputTriangle.Y[2] - inputTriangle.Y[0]) / (inputTriangle.X[2] - inputTriangle.X[0]); //the slope between the points of highest and lowest x values
     double zGradientBetweenExtremeXs = (inputTriangle.Z[2] - inputTriangle.Z[0]) / (inputTriangle.X[2] - inputTriangle.X[0]);
 
@@ -817,7 +817,7 @@ int main()
 
 
     //for each of the camera's four perspectives
-    for (int f = 0; f < 2; f++) //only doing one of them right now
+    for (int f = 0; f < 4; f++) 
     {
         std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file. Re-reading adds extra io, so this could be improved
         std::vector<Triangle> triangles; //triangles we're actually gonna use. 
@@ -831,23 +831,15 @@ int main()
         Matrix viewTrans = cam.ViewTransform();
         Matrix viewSpace = Matrix::ComposeMatrices(camTrans, viewTrans); //multiply the three matrices
 
-        //this is one of the test points 
-        double testNormal[] = { -0.298006, 0.521185, 0.799724 };
-        double testView[] = { 0.105531, 0.730962, 0.674209 };
-        cout << "diffuse is " << CalculateDiffuseShading(testNormal, lp) << endl;
-        cout << "specular is "<< CalculateSpecularShading(testNormal, testView, lp)<<endl;
-
         //loop though each triangle read from file and add two generated triangles to triangles
         for (int t = 0; t < readTriangles.size(); t++)
         {       
-            readTriangles[t].transform(viewSpace);
-
+            readTriangles[t].transform(viewSpace, cam);
             readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
-            readTriangles[t].calculateShaders(cam, lp);  
-            
+            readTriangles[t].calculateShaders(cam, lp);
+              
             rasturize(readTriangles[t], &triangles);
-        }
-        
+        }    
 
         //"zeroing" our buffers
         for (int i = 0; i < 1000 * 1000 * 3; i++)
@@ -889,11 +881,9 @@ int main()
 
                     zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer         
 
-                    double shade;
-                    if (f == 0)
-                     shade = diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
-                    else
-                    shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    double shade = lp.Ka 
+                        + diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])
+                        + specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
 
                     //set this pixel's color
                     buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = std::min((int)ceil__441(shade * (colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255);
