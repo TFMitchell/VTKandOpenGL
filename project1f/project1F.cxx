@@ -315,6 +315,19 @@ public:
             Y[i] = newY / W;
             Z[i] = newZ / W;
         }     
+
+        /*for (int i = 0; i < 3; i++)
+        {
+            double newX, newY, newZ, W;
+            newX = transformation.A[0][0] * normals[i][0] + transformation.A[1][0] * normals[i][1] + transformation.A[2][0] * normals[i][2] + transformation.A[3][0];
+            newY = transformation.A[0][1] * normals[i][0] + transformation.A[1][1] * normals[i][1] + transformation.A[2][1] * normals[i][2] + transformation.A[3][1];
+            newZ = transformation.A[0][2] * normals[i][0] + transformation.A[1][2] * normals[i][1] + transformation.A[2][2] * normals[i][2] + transformation.A[3][2];
+            W = transformation.A[0][3] * normals[i][0] + transformation.A[1][3] * normals[i][1] + transformation.A[2][3] * normals[i][2] + transformation.A[3][3];
+
+            normals[i][0] = newX / W;
+            normals[i][1] = newY / W;
+            normals[i][2] = newZ / W;
+        }*/
     }
 
     void sortPointsByX() //this will sort X[] values (ascending) for this triangle and shuffle the Y[] as well so it matches
@@ -804,12 +817,13 @@ int main()
 
 
     //for each of the camera's four perspectives
-    for (int f = 0; f < 1; f++) //only doing one of them right now
+    for (int f = 0; f < 2; f++) //only doing one of them right now
     {
         std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file. Re-reading adds extra io, so this could be improved
         std::vector<Triangle> triangles; //triangles we're actually gonna use. 
 
-        Camera cam = GetCamera(f * 250, 1000);
+        //Camera cam = GetCamera(f * 250, 1000);
+        Camera cam = GetCamera(0, 1000);
 
         LightingParameters lp = GetLighting(cam);
 
@@ -825,10 +839,11 @@ int main()
 
         //loop though each triangle read from file and add two generated triangles to triangles
         for (int t = 0; t < readTriangles.size(); t++)
-        {
+        {       
             readTriangles[t].transform(viewSpace);
+
             readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
-            readTriangles[t].calculateShaders(cam, lp);
+            readTriangles[t].calculateShaders(cam, lp);  
             
             rasturize(readTriangles[t], &triangles);
         }
@@ -874,8 +889,11 @@ int main()
 
                     zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer         
 
-                    //double shade = diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
-                    double shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    double shade;
+                    if (f == 0)
+                     shade = diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    else
+                    shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
 
                     //set this pixel's color
                     buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = std::min((int)ceil__441(shade * (colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255);
