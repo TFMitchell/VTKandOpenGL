@@ -41,7 +41,6 @@ struct LightingParameters
     double alpha;       // The exponent term for specular lighting
 };
 
-
 class Matrix
 {
 public:
@@ -53,22 +52,21 @@ public:
 
 static void normalize(double* myVector) //normalizes a vector in the form of a double with three elements
 {
-    double magnitude = sqrt(pow(myVector[0], 2) + pow(myVector[1], 2) + pow(myVector[2], 2));
+    double magnitude = std::sqrt(std::pow(myVector[0], 2) + std::pow(myVector[1], 2) + std::pow(myVector[2], 2));
 
     for (int i = 0; i < 3; i++)
-        myVector[i] = myVector[i] / magnitude;
+        myVector[i] /= magnitude;
 }
 
 
-double CalculateDiffuseShading(double* normal, LightingParameters lp)
+static double CalculateDiffuseShading(double* normal, LightingParameters lp)
 {
-    return std::max((double) 0.f, (lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2]) * lp.Kd);
+    return std::max((double) 0.f, (lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2]) ) * lp.Kd;
 }
 
-double CalculateSpecularShading(double* normal, double* viewDirection, LightingParameters lp)
+static double CalculateSpecularShading(double* normal, double* viewDirection, LightingParameters lp)
 {
     double dotProdLightAndNormal = lp.lightDir[0] * normal[0] + lp.lightDir[1] * normal[1] + lp.lightDir[2] * normal[2];
-
     normalize(viewDirection);
 
     double R[] =
@@ -80,7 +78,10 @@ double CalculateSpecularShading(double* normal, double* viewDirection, LightingP
 
     normalize(R);
 
-    return lp.Ks * std::pow(viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2], lp.alpha);
+    //cout << "reflection vector " << R[0] << " " << R[1] << " " << R[2] << endl;
+    //cout << "RdotV is " << viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2] << endl;
+
+    return std::max((double)0.f, lp.Ks * std::pow(viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2], lp.alpha));
 }
 
 
@@ -282,7 +283,6 @@ Matrix::ComposeMatrices(const Matrix& M1, const Matrix& M2)
             for (int k = 0; k < 4; k++)
                 rv.A[i][j] += M1.A[i][k] * M2.A[k][j];
         }
-
     return rv;
 }
 
@@ -295,6 +295,7 @@ public:
     double colors[3][3];
     double normals[3][3];
     double diffuseShaders[3];
+    double specularShaders[3];
 
     //store these as member variables to reduce the number of calculations needed
     double bottomSlope, bottomRGBGradient[3], bottomDiffuseGradient, bottomSpecularGradient, bottomZGradient, bottomStartPt[8]; //[8] is { X, Y, Z, R, G, B, diffuse, specular }
@@ -304,11 +305,11 @@ public:
     {
         for (int i = 0; i < 3; i++)
         {
-            double newX, newY, newZ;
+            double newX, newY, newZ, W;
             newX = transformation.A[0][0] * X[i] + transformation.A[1][0] * Y[i] + transformation.A[2][0] * Z[i] + transformation.A[3][0];
             newY = transformation.A[0][1] * X[i] + transformation.A[1][1] * Y[i] + transformation.A[2][1] * Z[i] + transformation.A[3][1];
             newZ = transformation.A[0][2] * X[i] + transformation.A[1][2] * Y[i] + transformation.A[2][2] * Z[i] + transformation.A[3][2];
-            double W = transformation.A[0][3] * X[i] + transformation.A[1][3] * Y[i] + transformation.A[2][3] * Z[i] + transformation.A[3][3];
+            W = transformation.A[0][3] * X[i] + transformation.A[1][3] * Y[i] + transformation.A[2][3] * Z[i] + transformation.A[3][3];
 
             X[i] = newX / W;
             Y[i] = newY / W;
@@ -390,11 +391,9 @@ public:
         }
     }
 
-    void prepare(LightingParameters lp, Camera c) //run this before using getRowBounds()
+    void prepare() //run this before using getRowBounds()
     {
         //determine the points with matching x values, as well as the point with a unique x
-
-        double viewDirection[3];
 
         if (X[0] != X[1] && X[0] != X[2]) //left-pointing triangle
         {
@@ -410,12 +409,7 @@ public:
             bottomStartPt[4] = colors[0][1];
             bottomStartPt[5] = colors[0][2];
             bottomStartPt[6] = diffuseShaders[0];
-
-            viewDirection[0] = c.position[0] - X[0];
-            viewDirection[1] = c.position[1] - Y[0];
-            viewDirection[2] = c.position[2] - Z[0];
-            
-            bottomStartPt[7] = CalculateSpecularShading(normals[0], viewDirection, lp);
+            bottomStartPt[7] = specularShaders[0];
 
             bottomSlope = (Y[idxLowYPt] - Y[0]) / (X[idxLowYPt] - X[0]);
             bottomZGradient = (Z[idxLowYPt] - Z[0]) / (X[idxLowYPt] - X[0]);
@@ -424,13 +418,8 @@ public:
             bottomRGBGradient[1] = (colors[idxLowYPt][1] - colors[0][1]) / (X[idxLowYPt] - X[0]);
             bottomRGBGradient[2] = (colors[idxLowYPt][2] - colors[0][2]) / (X[idxLowYPt] - X[0]);
 
-            bottomDiffuseGradient = (diffuseShaders[idxLowYPt] - bottomStartPt[6]) / (X[idxLowYPt] - X[0]);
-
-            viewDirection[0] = c.position[0] - X[idxLowYPt];
-            viewDirection[1] = c.position[1] - Y[idxLowYPt];
-            viewDirection[2] = c.position[2] - Z[idxLowYPt];
-           
-            bottomSpecularGradient = (CalculateSpecularShading(normals[idxLowYPt], viewDirection, lp) - bottomStartPt[7]) / (X[idxLowYPt] - X[0]);
+            bottomDiffuseGradient = (diffuseShaders[idxLowYPt] - bottomStartPt[6]) / (X[idxLowYPt] - X[0]); 
+            bottomSpecularGradient = (specularShaders[idxLowYPt] - bottomStartPt[7]) / (X[idxLowYPt] - X[0]);
 
             //the point of the highest y
             int idxHighPt = 1;
@@ -444,12 +433,7 @@ public:
             topStartPt[4] = colors[0][1];
             topStartPt[5] = colors[0][2];
             topStartPt[6] = diffuseShaders[0];
-
-            viewDirection[0] = c.position[0] - X[0];
-            viewDirection[1] = c.position[1] - Y[0];
-            viewDirection[2] = c.position[2] - Z[0];
-        
-            topStartPt[7] = CalculateSpecularShading(normals[0], viewDirection, lp);
+            topStartPt[7] = specularShaders[0];
 
             topSlope = (Y[idxHighPt] - Y[0]) / (X[idxHighPt] - X[0]);
             topZGradient = (Z[idxHighPt] - Z[0]) / (X[idxHighPt] - X[0]);
@@ -459,13 +443,7 @@ public:
             topRGBGradient[2] = (colors[idxHighPt][2] - colors[0][2]) / (X[idxHighPt] - X[0]);
 
             topDiffuseGradient = (diffuseShaders[idxHighPt]- topStartPt[6]) / (X[idxHighPt] - X[0]);
-
-
-            viewDirection[0] = c.position[0] - X[idxHighPt];
-            viewDirection[1] = c.position[1] - Y[idxHighPt];
-            viewDirection[2] = c.position[2] - Z[idxHighPt];
-            
-            topSpecularGradient = (CalculateSpecularShading(normals[idxHighPt], viewDirection, lp) - topStartPt[7]) / (X[idxHighPt] - X[0]);
+            topSpecularGradient = (specularShaders[idxHighPt] - topStartPt[7]) / (X[idxHighPt] - X[0]);
         }
 
         else //(X[2] != X[0] && X[2] != X[1]) //right-pointing triangle
@@ -482,12 +460,7 @@ public:
             bottomStartPt[4] = colors[idxLowYPt][1];
             bottomStartPt[5] = colors[idxLowYPt][2];
             bottomStartPt[6] = diffuseShaders[idxLowYPt];
-
-            viewDirection[0] = c.position[0] - X[idxLowYPt];
-            viewDirection[1] = c.position[1] - Y[idxLowYPt];
-            viewDirection[2] = c.position[2] - Z[idxLowYPt];
-       
-            bottomStartPt[7] = CalculateSpecularShading(normals[idxLowYPt], viewDirection, lp);
+            bottomStartPt[7] = specularShaders[idxLowYPt];
 
             bottomSlope = (Y[2] - Y[idxLowYPt]) / (X[2] - X[idxLowYPt]);
             bottomZGradient = (Z[2] - Z[idxLowYPt]) / (X[2] - X[idxLowYPt]);
@@ -496,13 +469,8 @@ public:
             bottomRGBGradient[1] = (colors[2][1] - colors[idxLowYPt][1]) / (X[2] - X[idxLowYPt]);
             bottomRGBGradient[2] = (colors[2][2] - colors[idxLowYPt][2]) / (X[2] - X[idxLowYPt]);
 
-            bottomDiffuseGradient = (diffuseShaders[2] - bottomStartPt[6]) / (X[2] - X[idxLowYPt]);
-            
-            viewDirection[0] = c.position[0] - X[2];
-            viewDirection[1] = c.position[1] - Y[2];
-            viewDirection[2] = c.position[2] - Z[2];
-            
-            bottomSpecularGradient = (CalculateSpecularShading(normals[2], viewDirection, lp) - bottomStartPt[7]) / (X[2] - X[idxLowYPt]);
+            bottomDiffuseGradient = (diffuseShaders[2] - bottomStartPt[6]) / (X[2] - X[idxLowYPt]);     
+            bottomSpecularGradient = (specularShaders[2] - bottomStartPt[7]) / (X[2] - X[idxLowYPt]);
 
 
             int idxHighPt = 0;
@@ -516,12 +484,7 @@ public:
             topStartPt[4] = colors[idxHighPt][1];
             topStartPt[5] = colors[idxHighPt][2];
             topStartPt[6] = diffuseShaders[idxHighPt];
-
-            viewDirection[0] = c.position[0] - X[idxHighPt];
-            viewDirection[1] = c.position[1] - Y[idxHighPt];
-            viewDirection[2] = c.position[2] - Z[idxHighPt];
-            
-            topStartPt[7] = CalculateSpecularShading(normals[idxHighPt], viewDirection, lp);
+            topStartPt[7] = specularShaders[idxHighPt];
 
             topSlope = (Y[2] - Y[idxHighPt]) / (X[2] - X[idxHighPt]);
             topZGradient = (Z[2] - Z[idxHighPt]) / (X[2] - X[idxHighPt]);
@@ -531,12 +494,7 @@ public:
             topRGBGradient[2] = (colors[2][2] - colors[idxHighPt][2]) / (X[2] - X[idxHighPt]);
 
             topDiffuseGradient = (diffuseShaders[2] - topStartPt[6]) / (X[2] - X[idxHighPt]);
-
-            viewDirection[0] = c.position[0] - X[2];
-            viewDirection[1] = c.position[1] - Y[2];
-            viewDirection[2] = c.position[2] - Z[2];
-
-            topSpecularGradient = (CalculateSpecularShading(normals[2], viewDirection, lp) - topStartPt[7]) / (X[2] - X[idxHighPt]);
+            topSpecularGradient = (specularShaders[2] - topStartPt[7]) / (X[2] - X[idxHighPt]);
         }
     }
 
@@ -563,7 +521,116 @@ public:
         zAtLimits[0] = bottomStartPt[2] + bottomZGradient * (column - bottomStartPt[0]);
         zAtLimits[1] = topStartPt[2] + topZGradient * (column - topStartPt[0]);
     }
+
+    void calculateShaders(Camera cam, LightingParameters lp)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            double view[] =
+            {
+                cam.position[0] - X[i],
+                cam.position[1] - Y[i],
+                cam.position[2] - Z[i]
+            };
+            diffuseShaders[i] = CalculateDiffuseShading(normals[i], lp);
+            specularShaders[i] = CalculateSpecularShading(normals[i], view, lp);
+        }
+    }
+
 };
+
+static void rasturize(Triangle inputTriangle, std::vector<Triangle>* appendTo)
+{
+
+    double slopeBetweenExtremeXs = (inputTriangle.Y[2] - inputTriangle.Y[0]) / (inputTriangle.X[2] - inputTriangle.X[0]); //the slope between the points of highest and lowest x values
+    double zGradientBetweenExtremeXs = (inputTriangle.Z[2] - inputTriangle.Z[0]) / (inputTriangle.X[2] - inputTriangle.X[0]);
+
+    double colorGradientBetweenExtremeXs[] =
+    {
+        (inputTriangle.colors[2][0] - inputTriangle.colors[0][0]) / (inputTriangle.X[2] - inputTriangle.X[0]),
+        (inputTriangle.colors[2][1] - inputTriangle.colors[0][1]) / (inputTriangle.X[2] - inputTriangle.X[0]),
+        (inputTriangle.colors[2][2] - inputTriangle.colors[0][2]) / (inputTriangle.X[2] - inputTriangle.X[0])
+    };
+
+    double diffuseGradientBetweenExtremeXs = (inputTriangle.diffuseShaders[2] - inputTriangle.diffuseShaders[0]) / (inputTriangle.X[2] - inputTriangle.X[0]);
+    double specularGradientBetweenExtremeXs = (inputTriangle.specularShaders[2] - inputTriangle.specularShaders[0]) / (inputTriangle.X[2] - inputTriangle.X[0]);
+
+    //the new point has the x of our midrange existing point.
+    //y of new pt = y of leftmost point + slope between the leftmost and rightmost points * num of steps between leftmost's x and new pt's x
+    double newPoint[] = //form x, y, z, r, g, b, normals for each three colors
+    {
+        inputTriangle.X[1],
+        inputTriangle.Y[0] + slopeBetweenExtremeXs * (inputTriangle.X[1] - inputTriangle.X[0]),
+        inputTriangle.Z[0] + zGradientBetweenExtremeXs * (inputTriangle.X[1] - inputTriangle.X[0]),
+        inputTriangle.colors[0][0] + colorGradientBetweenExtremeXs[0] * (inputTriangle.X[1] - inputTriangle.X[0]),
+        inputTriangle.colors[0][1] + colorGradientBetweenExtremeXs[1] * (inputTriangle.X[1] - inputTriangle.X[0]),
+        inputTriangle.colors[0][2] + colorGradientBetweenExtremeXs[2] * (inputTriangle.X[1] - inputTriangle.X[0]),
+        inputTriangle.diffuseShaders[0] + diffuseGradientBetweenExtremeXs * (inputTriangle.X[1] - inputTriangle.X[0]),
+        inputTriangle.specularShaders[0] + specularGradientBetweenExtremeXs * (inputTriangle.X[1] - inputTriangle.X[0])
+    };
+
+
+    //putting together and pushing the two triangles before iterating through the loop again
+    Triangle leftTriangle;
+    leftTriangle.X[0] = inputTriangle.X[0];
+    leftTriangle.Y[0] = inputTriangle.Y[0];
+    leftTriangle.Z[0] = inputTriangle.Z[0];
+    leftTriangle.colors[0][0] = inputTriangle.colors[0][0];
+    leftTriangle.colors[0][1] = inputTriangle.colors[0][1];
+    leftTriangle.colors[0][2] = inputTriangle.colors[0][2];
+    leftTriangle.diffuseShaders[0] = inputTriangle.diffuseShaders[0];
+    leftTriangle.specularShaders[0] = inputTriangle.specularShaders[0];
+
+    leftTriangle.X[1] = inputTriangle.X[1];
+    leftTriangle.Y[1] = inputTriangle.Y[1];
+    leftTriangle.Z[1] = inputTriangle.Z[1];
+    leftTriangle.colors[1][0] = inputTriangle.colors[1][0];
+    leftTriangle.colors[1][1] = inputTriangle.colors[1][1];
+    leftTriangle.colors[1][2] = inputTriangle.colors[1][2];
+    leftTriangle.diffuseShaders[1] = inputTriangle.diffuseShaders[1];
+    leftTriangle.specularShaders[1] = inputTriangle.specularShaders[1];
+
+    leftTriangle.X[2] = newPoint[0];
+    leftTriangle.Y[2] = newPoint[1];
+    leftTriangle.Z[2] = newPoint[2];
+    leftTriangle.colors[2][0] = newPoint[3];
+    leftTriangle.colors[2][1] = newPoint[4];
+    leftTriangle.colors[2][2] = newPoint[5];
+    leftTriangle.diffuseShaders[2] = newPoint[6];
+    leftTriangle.specularShaders[2] = newPoint[7];
+
+    appendTo->push_back(leftTriangle);
+
+    Triangle rightTriangle;
+    rightTriangle.X[0] = inputTriangle.X[1];
+    rightTriangle.Y[0] = inputTriangle.Y[1];
+    rightTriangle.Z[0] = inputTriangle.Z[1];
+    rightTriangle.colors[0][0] = inputTriangle.colors[1][0];
+    rightTriangle.colors[0][1] = inputTriangle.colors[1][1];
+    rightTriangle.colors[0][2] = inputTriangle.colors[1][2];
+    rightTriangle.diffuseShaders[0] = inputTriangle.diffuseShaders[1];
+    rightTriangle.specularShaders[0] = inputTriangle.specularShaders[1];
+
+    rightTriangle.X[1] = newPoint[0];
+    rightTriangle.Y[1] = newPoint[1];
+    rightTriangle.Z[1] = newPoint[2];
+    rightTriangle.colors[1][0] = newPoint[3];
+    rightTriangle.colors[1][1] = newPoint[4];
+    rightTriangle.colors[1][2] = newPoint[5];
+    rightTriangle.diffuseShaders[1] = newPoint[6];
+    rightTriangle.specularShaders[1] = newPoint[7];
+
+    rightTriangle.X[2] = inputTriangle.X[2];
+    rightTriangle.Y[2] = inputTriangle.Y[2];
+    rightTriangle.Z[2] = inputTriangle.Z[2];
+    rightTriangle.colors[2][0] = inputTriangle.colors[2][0];
+    rightTriangle.colors[2][1] = inputTriangle.colors[2][1];
+    rightTriangle.colors[2][2] = inputTriangle.colors[2][2];
+    rightTriangle.diffuseShaders[2] = inputTriangle.diffuseShaders[2];
+    rightTriangle.specularShaders[2] = inputTriangle.specularShaders[2];
+
+    appendTo->push_back(rightTriangle);
+}
 
 
 std::vector<Triangle>
@@ -737,7 +804,7 @@ int main()
 
 
     //for each of the camera's four perspectives
-    for (int f = 0; f < 1; f++)
+    for (int f = 0; f < 1; f++) //only doing one of them right now
     {
         std::vector<Triangle> readTriangles = GetTriangles(); //triangles read from file. Re-reading adds extra io, so this could be improved
         std::vector<Triangle> triangles; //triangles we're actually gonna use. 
@@ -750,96 +817,22 @@ int main()
         Matrix viewTrans = cam.ViewTransform();
         Matrix viewSpace = Matrix::ComposeMatrices(camTrans, viewTrans); //multiply the three matrices
 
+        //this is one of the test points 
+        double testNormal[] = { -0.298006, 0.521185, 0.799724 };
+        double testView[] = { 0.105531, 0.730962, 0.674209 };
+        cout << "diffuse is " << CalculateDiffuseShading(testNormal, lp) << endl;
+        cout << "specular is "<< CalculateSpecularShading(testNormal, testView, lp)<<endl;
+
         //loop though each triangle read from file and add two generated triangles to triangles
         for (int t = 0; t < readTriangles.size(); t++)
         {
-            readTriangles[t].transform(viewSpace); //adjust the points for this triangle according to the total matrix
-
+            readTriangles[t].transform(viewSpace);
             readTriangles[t].sortPointsByX(); //have the points in this triangle sorted by their X values
-
-            double slopeBetweenExtremeXs = (readTriangles[t].Y[2] - readTriangles[t].Y[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]); //the slope between the points of highest and lowest x values
-            double zGradientBetweenExtremeXs = (readTriangles[t].Z[2] - readTriangles[t].Z[0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]);
-   
-            double colorGradientBetweenExtremeXs[] =
-            {
-                (readTriangles[t].colors[2][0] - readTriangles[t].colors[0][0]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
-                (readTriangles[t].colors[2][1] - readTriangles[t].colors[0][1]) / (readTriangles[t].X[2] - readTriangles[t].X[0]),
-                (readTriangles[t].colors[2][2] - readTriangles[t].colors[0][2]) / (readTriangles[t].X[2] - readTriangles[t].X[0])
-            };
-
-            double diffuseGradientBetweenExtremeXs = (CalculateDiffuseShading(readTriangles[t].normals[2], lp) - CalculateDiffuseShading(readTriangles[t].normals[0], lp)) / (readTriangles[t].X[2] - readTriangles[t].X[0]);
-            //double specularGradientBetweenExtremeXs = (CalculateSpecularShading(readTriangles[t].normals[2], lp) - CalculateSpecularShading(readTriangles[t].normals[0], lp)) / (readTriangles[t].X[2] - readTriangles[t].X[0]);
-
-            //the new point has the x of our midrange existing point.
-            //y of new pt = y of leftmost point + slope between the leftmost and rightmost points * num of steps between leftmost's x and new pt's x
-            double newPoint[] = //form x, y, z, r, g, b, normals for each three colors
-            {
-                readTriangles[t].X[1],
-                readTriangles[t].Y[0] + slopeBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-                readTriangles[t].Z[0] + zGradientBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-                readTriangles[t].colors[0][0] + colorGradientBetweenExtremeXs[0] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-                readTriangles[t].colors[0][1] + colorGradientBetweenExtremeXs[1] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-                readTriangles[t].colors[0][2] + colorGradientBetweenExtremeXs[2] * (readTriangles[t].X[1] - readTriangles[t].X[0]),
-                CalculateDiffuseShading(readTriangles[t].normals[0], lp) + diffuseGradientBetweenExtremeXs * (readTriangles[t].X[1] - readTriangles[t].X[0])
-            };
-
-
-            //putting together and pushing the two triangles before iterating through the loop again
-            Triangle leftTriangle;
-            leftTriangle.X[0] = readTriangles[t].X[0];
-            leftTriangle.Y[0] = readTriangles[t].Y[0];
-            leftTriangle.Z[0] = readTriangles[t].Z[0];
-            leftTriangle.colors[0][0] = readTriangles[t].colors[0][0];
-            leftTriangle.colors[0][1] = readTriangles[t].colors[0][1];
-            leftTriangle.colors[0][2] = readTriangles[t].colors[0][2];
-            leftTriangle.diffuseShaders[0] = CalculateDiffuseShading(readTriangles[t].normals[0], lp);
-
-            leftTriangle.X[1] = readTriangles[t].X[1];
-            leftTriangle.Y[1] = readTriangles[t].Y[1];
-            leftTriangle.Z[1] = readTriangles[t].Z[1];
-            leftTriangle.colors[1][0] = readTriangles[t].colors[1][0];
-            leftTriangle.colors[1][1] = readTriangles[t].colors[1][1];
-            leftTriangle.colors[1][2] = readTriangles[t].colors[1][2];
-            leftTriangle.diffuseShaders[1] = CalculateDiffuseShading(readTriangles[t].normals[1], lp);
-
-            leftTriangle.X[2] = newPoint[0];
-            leftTriangle.Y[2] = newPoint[1];
-            leftTriangle.Z[2] = newPoint[2];
-            leftTriangle.colors[2][0] = newPoint[3];
-            leftTriangle.colors[2][1] = newPoint[4];
-            leftTriangle.colors[2][2] = newPoint[5];
-            leftTriangle.diffuseShaders[2] = newPoint[6];
-
-
-            triangles.push_back(leftTriangle);
-
-            Triangle rightTriangle;
-            rightTriangle.X[0] = readTriangles[t].X[1];
-            rightTriangle.Y[0] = readTriangles[t].Y[1];
-            rightTriangle.Z[0] = readTriangles[t].Z[1];
-            rightTriangle.colors[0][0] = readTriangles[t].colors[1][0];
-            rightTriangle.colors[0][1] = readTriangles[t].colors[1][1];
-            rightTriangle.colors[0][2] = readTriangles[t].colors[1][2];
-            rightTriangle.diffuseShaders[0] = CalculateDiffuseShading(readTriangles[t].normals[1], lp);
-
-            rightTriangle.X[1] = newPoint[0];
-            rightTriangle.Y[1] = newPoint[1];
-            rightTriangle.Z[1] = newPoint[2];
-            rightTriangle.colors[1][0] = newPoint[3];
-            rightTriangle.colors[1][1] = newPoint[4];
-            rightTriangle.colors[1][2] = newPoint[5];
-            rightTriangle.diffuseShaders[1] = newPoint[6];
-
-            rightTriangle.X[2] = readTriangles[t].X[2];
-            rightTriangle.Y[2] = readTriangles[t].Y[2];
-            rightTriangle.Z[2] = readTriangles[t].Z[2];
-            rightTriangle.colors[2][0] = readTriangles[t].colors[2][0];
-            rightTriangle.colors[2][1] = readTriangles[t].colors[2][1];
-            rightTriangle.colors[2][2] = readTriangles[t].colors[2][2];
-            rightTriangle.diffuseShaders[2] = CalculateDiffuseShading(readTriangles[t].normals[2], lp);
-
-            triangles.push_back(rightTriangle);
+            readTriangles[t].calculateShaders(cam, lp);
+            
+            rasturize(readTriangles[t], &triangles);
         }
+        
 
         //"zeroing" our buffers
         for (int i = 0; i < 1000 * 1000 * 3; i++)
@@ -850,8 +843,8 @@ int main()
 
         //looping through our generated triangles
         for (int t = 0; t < triangles.size(); t++)
-        {
-            triangles[t].prepare(lp, cam); //compute the slopes/other info necessary to get the row bounds for each scanline
+        {   
+            triangles[t].prepare(); //compute the slopes/other info necessary to get the row bounds for each scanline
 
             for (int scanPosition = ceil__441(500.f + 500.f * (triangles[t].X[0]));
                 scanPosition <= floor__441(500.f + 500.f * triangles[t].X[2]);
@@ -881,8 +874,8 @@ int main()
 
                     zBuffer[currentRow * screen.width + scanPosition] = zValue; //set z buffer         
 
-                    double shade = diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);               
-                    //double shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    //double shade = diffuseShaderAtLimits[0] + (diffuseShaderAtLimits[1] - diffuseShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
+                    double shade = specularShaderAtLimits[0] + (specularShaderAtLimits[1] - specularShaderAtLimits[0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0]);
 
                     //set this pixel's color
                     buffer[currentRow * screen.width * 3 + scanPosition * 3 + 0] = std::min((int)ceil__441(shade * (colorsAtLimits[0][0] + (colorsAtLimits[1][0] - colorsAtLimits[0][0]) * (((double)currentRow - 500.f) / 500.f - rowLimits[0]) / (rowLimits[1] - rowLimits[0])) * 255.f), 255);
