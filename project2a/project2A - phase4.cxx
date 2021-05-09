@@ -1,11 +1,3 @@
-/*
-* Project 2A
-* 
-* It looks like my output matches what is in the PDF. It might have been nice to have a larger image or even a separate screenshot for easier comparison.
-* 
-* Thomas Mitchell
-*/
-
 #include <GL/glew.h>    // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <stdio.h>
@@ -21,10 +13,9 @@
 
 #define PHASE3
 #define PHASE4
-#define PHASE5
+//#define PHASE5
 
-void _print_shader_info_log(GLuint shader_index) 
-{
+void _print_shader_info_log(GLuint shader_index) {
   int max_length = 2048;
   int actual_length = 0;
   char shader_log[2048];
@@ -52,16 +43,19 @@ GLuint SetupPhase2DataForRendering()
   GLuint points_vbo = 0;
   glGenBuffers(1, &points_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
+  //glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), points, GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 
   GLuint colors_vbo = 0;
   glGenBuffers(1, &colors_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
+  //glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), colors, GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
   GLuint index_vbo;    // Index buffer object
   glGenBuffers( 1, &index_vbo);
   glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, index_vbo );
+  //glBufferData( GL_ELEMENT_ARRAY_BUFFER, 12 * sizeof(GLuint), indices, GL_STATIC_DRAW );
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
   GLuint vao = 0;
@@ -161,31 +155,6 @@ const char *phase345VertexShader =
   // camaraloc  : is the location of the camera
   // lightdir   : is the direction of the light
   // lightcoeff : represents a vec4(Ka, Kd, Ks, alpha) from LightingParams of 1F
-
-    "float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
-
-    "float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
-    "float viewDirection[3];\n"
-    "viewDirection[0] = cameraloc[0] - vertex_position[0];\n"
-    "viewDirection[1] = cameraloc[1] - vertex_position[1];\n"
-    "viewDirection[2] = cameraloc[2] - vertex_position[2];\n"
-
-    "float magnitude = sqrt(pow(viewDirection[0], 2) + pow(viewDirection[1], 2) + pow(viewDirection[2], 2));\n"
-
-    "for (int i = 0; i < 3; i++)\n"
-    "  viewDirection[i] /= magnitude; \n"
-
-    "float R[] = {2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
-    "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
-    "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]};\n"
-    "magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
-
-    "for (int i = 0; i < 3; i++)\n"
-    "  R[i] /= magnitude; \n"
-
-    "float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
-
-    "shading_amount = lightcoeff[0] + diffuse + specular;\n"
 #endif
 
   "}\n";
@@ -211,10 +180,6 @@ const char *phase345FragmentShader =
 #ifdef PHASE5
   // Update frag_color by mixing the shading factor
 #endif
-
-    "frag_color[0] = min(1.f, frag_color[0] * shading_amount);\n"
-    "frag_color[1] = min(1.f, frag_color[1] * shading_amount);\n"
-    "frag_color[2] = min(1.f, frag_color[2] * shading_amount);\n"
 
   "}\n";
 
