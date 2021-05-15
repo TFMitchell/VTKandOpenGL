@@ -1,3 +1,11 @@
+/*
+* Project 2B - CIS 441
+* 
+* 
+* Thomas Mitchell
+*/
+
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -452,7 +460,7 @@ int main()
   int counter=0;
   while (!glfwWindowShouldClose(window)) 
   {
-    double angle=counter/300.0*2*M_PI;
+    double angle=counter/3000.0*2*M_PI;
     counter++;
 
     glm::vec3 camera(10*sin(angle), 0, 10*cos(angle));
@@ -505,54 +513,95 @@ void SetUpEyeball(glm::mat4 modelSoFar, RenderManager &rm)
    rm.Render(RenderManager::SPHERE, modelSoFar*scaled10);
 
    glm::mat4 translate = TranslateMatrix(0, 0, 0.95);
-   glm::mat4 scaled30 = ScaleMatrix(0.3, 0.3, 0.3);
+   glm::mat4 scaled30 = ScaleMatrix(0.6, 0.6, 0.6);
    rm.SetColor(0,0,0);
    rm.Render(RenderManager::SPHERE, modelSoFar*scaled10*translate*scaled30);
 }
 
-void SetUpHead(glm::mat4 modelSoFar, RenderManager &rm)
+void SetUpEar(glm::mat4 modelSoFar, RenderManager& rm)
+{
+
+}
+
+void SetUpMouth(glm::mat4 modelSoFar, RenderManager& rm)
+{
+
+}
+
+void SetUpHead(RenderManager &rm)
 {
    // place center of head at X=3, Y=1, Z=0
-   glm::mat4 translate = TranslateMatrix(3, 1, 0);
+   glm::mat4 translate = TranslateMatrix(1.7, .9, 0);
+   glm::mat4 rotate = RotateMatrix(90, 0, 1, 0);
+   glm::mat4 scale = ScaleMatrix(.6, .6, .6);
+   rm.SetColor(1, .9, .7);
+   rm.Render(RenderManager::SPHERE, translate * rotate * scale);
 
-   glm::mat4 leftEyeTranslate = TranslateMatrix(-0.15, 0.25, 0);
-   glm::mat4 rotateInFromLeft = RotateMatrix(15, 0, 1, 0);
-   SetUpEyeball(modelSoFar*translate*leftEyeTranslate*rotateInFromLeft, rm);
+   glm::mat4 leftEyeTranslate = TranslateMatrix(.3, .2, -.4);
+   //glm::mat4 rotateInFromLeft = RotateMatrix(15, 0, 1, 0);
+   SetUpEyeball(translate*leftEyeTranslate*rotate, rm);
 
-   glm::mat4 rightEyeTranslate = TranslateMatrix(0.15, 0.25, 0);
-   glm::mat4 rotateInFromRight = RotateMatrix(-15, 0, 1, 0);
-   SetUpEyeball(modelSoFar*translate*rightEyeTranslate*rotateInFromRight, rm);
+   glm::mat4 rightEyeTranslate = TranslateMatrix(.3, .2, .4);
+   //glm::mat4 rotateInFromRight = RotateMatrix(-15, 0, 1, 0);
+   SetUpEyeball(translate*rightEyeTranslate*rotate, rm);
 }
 
 void
 SetUpDog(int counter, RenderManager &rm)
 {
-    glm::mat4 identity(1.0f);
-
-    double var=(counter%100)/99.0;
-    if ((counter/100 % 2) == 1)
-       var=1-var;
-
-    SetUpHead(identity, rm);
-
-    glm::mat4 M4 = ScaleMatrix(2.5, 2.5, 1.5);
-    rm.SetColor(0.5, 0.5, 0.5);
-    rm.Render(RenderManager::CYLINDER, M4);
-
-/*** THIS CODE JUST MAKES THREE SPHERES AND VARIES THEIR
- *** COLOR BASED ON THE COUNTER
- */
-    glm::mat4 M1 = TranslateMatrix(0.5, 0, 0);
-    rm.SetColor(0.0, var, 1.0);
-    rm.Render(RenderManager::SPHERE, M1);
+    //I found it easier to make matrices that included translation, rotation, and scale all in one, even though it 
+    //limits me from using it as a basis for objects attached to it. The head and eyes have separate matrices, however.
+    //colors were interpolated from https://www.rapidtables.com/web/color/brown-color.html
+    glm::mat4 body = ScaleMatrix(1.5, .5, .5);
+    rm.SetColor(.82, .41, .12);
+    rm.Render(RenderManager::SPHERE, body);
     
-    glm::mat4 M2 = TranslateMatrix(-0.5, 0, 0);
-    rm.SetColor(1.0, 0.0, var);
-    rm.Render(RenderManager::SPHERE, M2);
+    glm::mat4 tail = TranslateMatrix(-1.6, .4, 0) * RotateMatrix(-50, 0, 0, 1) * ScaleMatrix(.5, .1, .1); //SRT
+    rm.SetColor(.54, .27, .07);
+    rm.Render(RenderManager::SPHERE, tail);
     
-    glm::mat4 M3 = TranslateMatrix(0, 0.25, -3.0);
-    rm.SetColor(var, 1.0, 0.0);
-    rm.Render(RenderManager::SPHERE, M3*M4);
+
+    glm::mat4 backLeftLeg = TranslateMatrix(-1, -.6, -.4) * RotateMatrix(10, 1, 0, 0) *  ScaleMatrix(.2, .7, .2);
+    rm.SetColor(.54, .27, .07);
+    rm.Render(RenderManager::SPHERE, backLeftLeg);
+    
+    glm::mat4 backLeftFoot = TranslateMatrix(-.8, -1.2, -.5) * ScaleMatrix(.5, .1, .2);
+    rm.SetColor(.5, 0, 0);
+    rm.Render(RenderManager::SPHERE, backLeftFoot);
+
+
+    glm::mat4 backRightLeg = TranslateMatrix(-1, -.6, .4) * RotateMatrix(-10, 1, 0, 0) * ScaleMatrix(.2, .7, .2);
+    rm.SetColor(.54, .27, .07);
+    rm.Render(RenderManager::SPHERE, backRightLeg);
+
+    glm::mat4 backRightFoot = TranslateMatrix(-.8, -1.2, .5) * ScaleMatrix(.5, .1, .2);
+    rm.SetColor(.5, 0, 0);
+    rm.Render(RenderManager::SPHERE, backRightFoot);
+
+
+    glm::mat4 frontLeftLeg = TranslateMatrix(1, -.6, -.4) * RotateMatrix(10, 1, 0, 0) * ScaleMatrix(.2, .7, .2);
+    rm.SetColor(.54, .27, .07);
+    rm.Render(RenderManager::SPHERE, frontLeftLeg);
+
+    glm::mat4 frontLeftFoot = TranslateMatrix(1.2, -1.2, -.5) * ScaleMatrix(.5, .1, .2);
+    rm.SetColor(.5, 0, 0);
+    rm.Render(RenderManager::SPHERE, frontLeftFoot);
+
+
+    glm::mat4 frontRightLeg = TranslateMatrix(1, -.6, .4) * RotateMatrix(-10, 1, 0, 0) * ScaleMatrix(.2, .7, .2);
+    rm.SetColor(.54, .27, .07);
+    rm.Render(RenderManager::SPHERE, frontRightLeg);
+
+    glm::mat4 frontRightFoot = TranslateMatrix(1.2, -1.2, .5) * ScaleMatrix(.5, .1, .2);
+    rm.SetColor(.5, 0, 0);
+    rm.Render(RenderManager::SPHERE, frontRightFoot);
+
+
+    glm::mat4 neck = TranslateMatrix(1.2, .2, 0) * RotateMatrix(90, -1.5, 1, 0) * ScaleMatrix(.15, .15, .4);
+    rm.SetColor(.82, .41, .12);
+    rm.Render(RenderManager::CYLINDER, neck);
+
+    SetUpHead(rm);
 }
     
 const char *GetVertexShader()
@@ -569,31 +618,31 @@ const char *GetVertexShader()
            "out float shading_amount;\n"
            "void main() {\n"
            "  gl_Position = MVP*vec4(vertex_position, 1.0);\n"
-           "float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
+           "  float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
 
-           "float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
-           "float viewDirection[3];\n"
-           "viewDirection[0] = cameraloc[0] - vertex_position[0];\n"
-           "viewDirection[1] = cameraloc[1] - vertex_position[1];\n"
-           "viewDirection[2] = cameraloc[2] - vertex_position[2];\n"
+           "  float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
+           "  float viewDirection[3];\n"
+           "  viewDirection[0] = cameraloc[0] - vertex_position[0];\n"
+           "  viewDirection[1] = cameraloc[1] - vertex_position[1];\n"
+           "  viewDirection[2] = cameraloc[2] - vertex_position[2];\n"
 
-           "float magnitude = sqrt(pow(viewDirection[0], 2) + pow(viewDirection[1], 2) + pow(viewDirection[2], 2));\n"
+           "  float magnitude = sqrt(pow(viewDirection[0], 2) + pow(viewDirection[1], 2) + pow(viewDirection[2], 2));\n"
 
-           "for (int i = 0; i < 3; i++)\n"
-           "  viewDirection[i] /= magnitude; \n"
+           "  for (int i = 0; i < 3; i++)\n"
+           "    viewDirection[i] /= magnitude; \n"
 
-           "float R[] = {2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
-           "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
-           "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]};\n"
-           "magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
+           "  float R[] = {2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
+           "    2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
+           "    2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]};\n"
 
-           "for (int i = 0; i < 3; i++)\n"
-           "  R[i] /= magnitude; \n"
+           "  magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
 
-           "float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
+           "  for (int i = 0; i < 3; i++)\n"
+           "    R[i] /= magnitude; \n"
 
+           "  float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
 
-           "shading_amount = lightcoeff[0] + diffuse + specular;\n"
+           "  shading_amount = lightcoeff[0] + diffuse + specular;\n"
            "}\n"
          );
    return vertexShader;
@@ -610,9 +659,9 @@ const char *GetFragmentShader()
            "void main() {\n"
            "  frag_color = vec4(color, 1.0);\n"
 
-           "  /*frag_color[0] = min(1.f, frag_color[0] * shading_amount);\n"
+           "  frag_color[0] = min(1.f, frag_color[0] * shading_amount);\n"
            "  frag_color[1] = min(1.f, frag_color[1] * shading_amount);\n"
-           "  frag_color[2] = min(1.f, frag_color[2] * shading_amount);\n*/"
+           "  frag_color[2] = min(1.f, frag_color[2] * shading_amount);\n"
            "}\n"
          );
    return fragmentShader;
