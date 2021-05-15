@@ -557,13 +557,43 @@ SetUpDog(int counter, RenderManager &rm)
     
 const char *GetVertexShader()
 {
-   static char vertexShader[1024];
+   static char vertexShader[2048];
    strcpy(vertexShader, 
            "#version 400\n"
            "layout (location = 0) in vec3 vertex_position;\n"
+           "layout (location = 1) in vec3 vertex_normal;\n"
            "uniform mat4 MVP;\n"
+           "uniform vec3 cameraloc;  // Camera position \n"
+           "uniform vec3 lightdir;   // Lighting direction \n"
+           "uniform vec4 lightcoeff; // Lighting coeff, Ka, Kd, Ks, alpha\n"
+           "out float shading_amount;\n"
            "void main() {\n"
            "  gl_Position = MVP*vec4(vertex_position, 1.0);\n"
+           "float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
+
+           "float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
+           "float viewDirection[3];\n"
+           "viewDirection[0] = cameraloc[0] - vertex_position[0];\n"
+           "viewDirection[1] = cameraloc[1] - vertex_position[1];\n"
+           "viewDirection[2] = cameraloc[2] - vertex_position[2];\n"
+
+           "float magnitude = sqrt(pow(viewDirection[0], 2) + pow(viewDirection[1], 2) + pow(viewDirection[2], 2));\n"
+
+           "for (int i = 0; i < 3; i++)\n"
+           "  viewDirection[i] /= magnitude; \n"
+
+           "float R[] = {2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
+           "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
+           "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]};\n"
+           "magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
+
+           "for (int i = 0; i < 3; i++)\n"
+           "  R[i] /= magnitude; \n"
+
+           "float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
+
+
+           "shading_amount = lightcoeff[0] + diffuse + specular;\n"
            "}\n"
          );
    return vertexShader;
@@ -574,12 +604,16 @@ const char *GetFragmentShader()
    static char fragmentShader[1024];
    strcpy(fragmentShader, 
            "#version 400\n"
+           "in float shading_amount;\n"
            "uniform vec3 color;\n"
            "out vec4 frag_color;\n"
            "void main() {\n"
            "  frag_color = vec4(color, 1.0);\n"
+
+           "  /*frag_color[0] = min(1.f, frag_color[0] * shading_amount);\n"
+           "  frag_color[1] = min(1.f, frag_color[1] * shading_amount);\n"
+           "  frag_color[2] = min(1.f, frag_color[2] * shading_amount);\n*/"
            "}\n"
          );
    return fragmentShader;
 }
-
