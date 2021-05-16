@@ -95,10 +95,8 @@ void PushVertex(std::vector<float>& coords,
   coords.push_back(v.z);
 }
 
-//
 // Sets up a cylinder that is the circle x^2+y^2=1 extruded from
 // Z=0 to Z=1.
-//
 void GetCylinderData(std::vector<float>& coords, std::vector<float>& normals)
 {
   int nfacets = 30;
@@ -147,9 +145,7 @@ void GetCylinderData(std::vector<float>& coords, std::vector<float>& normals)
   }
 }
 
-//
 // Sets up a sphere with equation x^2+y^2+z^2=1
-//
 void
 GetSphereData(std::vector<float>& coords, std::vector<float>& normals)
 {
@@ -460,7 +456,7 @@ int main()
   int counter=0;
   while (!glfwWindowShouldClose(window)) 
   {
-    double angle=counter/3000.0*2*M_PI;
+    double angle=counter/3000.0*2*M_PI; //I had to change the /300 to /3000 because it seemed too fast otherwise
     counter++;
 
     glm::vec3 camera(10*sin(angle), 0, 10*cos(angle));
@@ -520,47 +516,70 @@ void SetUpEyeball(glm::mat4 modelSoFar, RenderManager &rm)
 
 void SetUpEar(glm::mat4 modelSoFar, RenderManager& rm)
 {
-
+    glm::mat4 scale = ScaleMatrix(.2, .5, .2);
+    rm.SetColor(.1, .1, .1);
+    rm.Render(RenderManager::SPHERE, modelSoFar * scale);
 }
 
 void SetUpMouth(glm::mat4 modelSoFar, RenderManager& rm)
 {
+    glm::mat4 scale = ScaleMatrix(.1, .1, .3);
 
+    //top lip
+    glm::mat4 translateTop = TranslateMatrix(0, .1, 0);
+    rm.SetColor(.64, .16, .16);
+    rm.Render(RenderManager::SPHERE, modelSoFar * translateTop * scale);
+
+    //bottom lip
+    glm::mat4 translateBottom = TranslateMatrix(0, -.1, 0);
+    rm.Render(RenderManager::SPHERE, modelSoFar * translateBottom * scale);
 }
 
 void SetUpHead(RenderManager &rm)
 {
-   // place center of head at X=3, Y=1, Z=0
    glm::mat4 translate = TranslateMatrix(1.7, .9, 0);
    glm::mat4 rotate = RotateMatrix(90, 0, 1, 0);
    glm::mat4 scale = ScaleMatrix(.6, .6, .6);
    rm.SetColor(1, .9, .7);
    rm.Render(RenderManager::SPHERE, translate * rotate * scale);
 
+   //eyes
    glm::mat4 leftEyeTranslate = TranslateMatrix(.3, .2, -.4);
-   //glm::mat4 rotateInFromLeft = RotateMatrix(15, 0, 1, 0);
-   SetUpEyeball(translate*leftEyeTranslate*rotate, rm);
+   SetUpEyeball(translate*leftEyeTranslate*rotate, rm); //had to add rotate to get these pre-existing ones consistent with the axes I'm using
 
    glm::mat4 rightEyeTranslate = TranslateMatrix(.3, .2, .4);
-   //glm::mat4 rotateInFromRight = RotateMatrix(-15, 0, 1, 0);
    SetUpEyeball(translate*rightEyeTranslate*rotate, rm);
+
+   //ears
+   glm::mat4 leftEarTranslate = TranslateMatrix(0, -.5, -.4);
+   SetUpEar(translate * leftEarTranslate, rm);
+
+   glm::mat4 rightEarTranslate = TranslateMatrix(0, -.5, .4);
+   SetUpEar(translate * rightEarTranslate, rm);
+
+   //mouth (both lips are made in next function)
+   glm::mat4 mouthTranslate = TranslateMatrix(.5, -.3, 0);
+   SetUpMouth(translate * mouthTranslate, rm);
 }
 
 void
 SetUpDog(int counter, RenderManager &rm)
 {
     //I found it easier to make matrices that included translation, rotation, and scale all in one, even though it 
-    //limits me from using it as a basis for objects attached to it. The head and eyes have separate matrices, however.
+    //limits me from using it as a basis for objects attached to it. The head, eyes, ears, and mouth have separate matrices, however.
     //colors were interpolated from https://www.rapidtables.com/web/color/brown-color.html
     glm::mat4 body = ScaleMatrix(1.5, .5, .5);
     rm.SetColor(.82, .41, .12);
     rm.Render(RenderManager::SPHERE, body);
+
+    double angle = counter / 300.0 * 2 * M_PI; //for tail-wagging
     
-    glm::mat4 tail = TranslateMatrix(-1.6, .4, 0) * RotateMatrix(-50, 0, 0, 1) * ScaleMatrix(.5, .1, .1); //SRT
+    //tail
+    glm::mat4 tail = TranslateMatrix(-1.2, 0, 0) * RotateMatrix(-50, 0, 0, 1) * RotateMatrix(25 * sin(angle), 0, 1, 0) * TranslateMatrix(-.5, 0, 0) * ScaleMatrix(.5, .1, .1); //SRT order, but I do a small translation after the scaling so that rotation is about the tail's base
     rm.SetColor(.54, .27, .07);
     rm.Render(RenderManager::SPHERE, tail);
     
-
+    //back left
     glm::mat4 backLeftLeg = TranslateMatrix(-1, -.6, -.4) * RotateMatrix(10, 1, 0, 0) *  ScaleMatrix(.2, .7, .2);
     rm.SetColor(.54, .27, .07);
     rm.Render(RenderManager::SPHERE, backLeftLeg);
@@ -569,7 +588,7 @@ SetUpDog(int counter, RenderManager &rm)
     rm.SetColor(.5, 0, 0);
     rm.Render(RenderManager::SPHERE, backLeftFoot);
 
-
+    //back right
     glm::mat4 backRightLeg = TranslateMatrix(-1, -.6, .4) * RotateMatrix(-10, 1, 0, 0) * ScaleMatrix(.2, .7, .2);
     rm.SetColor(.54, .27, .07);
     rm.Render(RenderManager::SPHERE, backRightLeg);
@@ -578,7 +597,7 @@ SetUpDog(int counter, RenderManager &rm)
     rm.SetColor(.5, 0, 0);
     rm.Render(RenderManager::SPHERE, backRightFoot);
 
-
+    //front left
     glm::mat4 frontLeftLeg = TranslateMatrix(1, -.6, -.4) * RotateMatrix(10, 1, 0, 0) * ScaleMatrix(.2, .7, .2);
     rm.SetColor(.54, .27, .07);
     rm.Render(RenderManager::SPHERE, frontLeftLeg);
@@ -587,7 +606,7 @@ SetUpDog(int counter, RenderManager &rm)
     rm.SetColor(.5, 0, 0);
     rm.Render(RenderManager::SPHERE, frontLeftFoot);
 
-
+    //front right
     glm::mat4 frontRightLeg = TranslateMatrix(1, -.6, .4) * RotateMatrix(-10, 1, 0, 0) * ScaleMatrix(.2, .7, .2);
     rm.SetColor(.54, .27, .07);
     rm.Render(RenderManager::SPHERE, frontRightLeg);
@@ -596,11 +615,10 @@ SetUpDog(int counter, RenderManager &rm)
     rm.SetColor(.5, 0, 0);
     rm.Render(RenderManager::SPHERE, frontRightFoot);
 
-
+    //neck, then head function
     glm::mat4 neck = TranslateMatrix(1.2, .2, 0) * RotateMatrix(90, -1.5, 1, 0) * ScaleMatrix(.15, .15, .4);
     rm.SetColor(.82, .41, .12);
     rm.Render(RenderManager::CYLINDER, neck);
-
     SetUpHead(rm);
 }
     
