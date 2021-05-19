@@ -18,10 +18,6 @@
 
 #include "proj3_data.h"
 
-#define PHASE3
-#define PHASE4
-#define PHASE5
-
 unsigned char*
 GetColorMap(int& textureSize)
 {
@@ -82,7 +78,7 @@ GetTigerStripes(int& textureSize)
     return ptr;
 }
 
-void _print_shader_info_log(GLuint shader_index) 
+static void _print_shader_info_log(GLuint shader_index) 
 {
   int max_length = 2048;
   int actual_length = 0;
@@ -91,76 +87,9 @@ void _print_shader_info_log(GLuint shader_index)
   printf("shader info log for GL index %u:\n%s\n", shader_index, shader_log);
 }
 
-GLuint SetupPhase2DataForRendering()
-{
-  printf("Getting data for Phase 2\n");
-
-  float points[] = {0.5f, 0.0f, 0.0f,
-                    0.0f, 0.0f, 0.0f,
-                    0.0f, 0.5f, 0.0f,
-                   -0.5f, 0.0f, 0.0f};
-
-  float colors[] = {1.0f, 0.0f, 0.0f,
-                    0.0f, 1.0f, 0.0f,
-                    0.0f, 0.0f, 1.0f,
-                    1.0f, 0.0f, 0.0f};
-
-  GLuint indices[] = {0 ,1, 2,
-                      1, 2, 3};
-
-  GLuint points_vbo = 0;
-  glGenBuffers(1, &points_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-
-  GLuint colors_vbo = 0;
-  glGenBuffers(1, &colors_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-  GLuint index_vbo;    // Index buffer object
-  glGenBuffers( 1, &index_vbo);
-  glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, index_vbo );
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-  GLuint vao = 0;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-  glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-  glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-  glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, index_vbo );
-
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-
-  return vao;
-}
-
-const char *phase2VertexShader =
-  "#version 400\n"
-  "layout (location = 0) in vec3 vertex_position;\n"
-  "layout (location = 1) in vec3 vertex_color;\n"
-  "out vec3 color;\n"
-  "void main() {\n"
-  "  color = vertex_color;\n"
-  "  gl_Position = vec4(vertex_position, 1.0);\n"
-  "}\n";
-
-const char *phase2FragmentShader =
-  "#version 400\n"
-  "in vec3 color;\n"
-  "out vec4 frag_color;\n"
-  "void main() {\n"
-  "  frag_color = vec4(color, 1.0);\n"
-  "}\n";
-
 
 GLuint SetupPhase345DataForRendering()
 {
-  printf("Getting data for Phase 3\n");
-
   GLuint points_vbo = 0;
   glGenBuffers(1, &points_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
@@ -215,12 +144,6 @@ const char *phase345VertexShader =
   "  gl_Position = MVP*position;\n"
   "  data = vertex_data;\n"
 
-#ifdef PHASE5
-  // Assign shading_amount a value by calculating phong shading
-  // camaraloc  : is the location of the camera
-  // lightdir   : is the direction of the light
-  // lightcoeff : represents a vec4(Ka, Kd, Ks, alpha) from LightingParams of 1F
-
     "float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
 
     "float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
@@ -245,32 +168,17 @@ const char *phase345VertexShader =
     "float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
 
     "shading_amount = lightcoeff[0] + diffuse + specular;\n"
-#endif
 
   "}\n";
 
 const char *phase345FragmentShader =
   "#version 400\n"
   "in float data;\n"
+  "uniform sampler1D texture1;\n"
   "in float shading_amount;\n"
   "out vec4 frag_color;\n"
   "void main() {\n"
-  "  frag_color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-
-#ifdef PHASE4
-  // Update frag_color by color based on data
-    "if (1.0 <= data && data < 4.5)\n"
-    "    frag_color = vec4(.25 + .75 * (data - 1) / 3.5, .25 + .75 * (data - 1) / 3.5, 1.0, 1.0);\n"
-    "else\n"
-    "    frag_color = vec4(1.0, 1.0 - .75 * (data - 4.5) / 1.5, 1.0 - .75 * (data - 4.5) / 1.5, 1.0);\n"
-    
-
-#endif
-
-#ifdef PHASE5
-  // Update frag_color by mixing the shading factor
-#endif
-
+    "frag_color = texture(texture1, (data - 1) / 5.0);\n"
     "frag_color[0] = min(1.f, frag_color[0] * shading_amount);\n"
     "frag_color[1] = min(1.f, frag_color[1] * shading_amount);\n"
     "frag_color[2] = min(1.f, frag_color[2] * shading_amount);\n"
@@ -313,15 +221,9 @@ int main() {
 
   GLuint vao = 0;
 
-#ifndef PHASE3
-  vao = SetupPhase2DataForRendering();
-  const char* vertex_shader = phase2VertexShader;
-  const char* fragment_shader = phase2FragmentShader;
-#else
   vao = SetupPhase345DataForRendering();
   const char* vertex_shader = phase345VertexShader;
   const char* fragment_shader = phase345FragmentShader;
-#endif
 
   GLuint vs = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vs, 1, &vertex_shader, NULL);
@@ -352,7 +254,6 @@ int main() {
   glUseProgram(shader_programme);
 
 
-#ifdef PHASE3  // Code block for camera transforms
   // Projection matrix : 30° Field of View
   // display size  : 1000x1000
   // display range : 5 unit <-> 200 units
@@ -379,9 +280,8 @@ int main() {
   // This is done in the main loop since each model will have a different MVP matrix
   // (At least for the M part)
   glUniformMatrix4fv(mvploc, 1, GL_FALSE, &mvp[0][0]);
-#endif
 
-#ifdef PHASE5 // Code block for shading parameters
+ // Code block for shading parameters
   GLuint camloc = glGetUniformLocation(shader_programme, "cameraloc");
   glUniform3fv(camloc, 1, &camera[0]);
   glm::vec3 lightdir = glm::normalize(camera - origin);   // Direction of light
@@ -390,21 +290,31 @@ int main() {
   glm::vec4 lightcoeff(0.3, 0.7, 2.8, 50.5); // Lighting coeff, Ka, Kd, Ks, alpha
   GLuint lcoeloc = glGetUniformLocation(shader_programme, "lightcoeff");
   glUniform4fv(lcoeloc, 1, &lightcoeff[0]);
-#endif
 
-  while (!glfwWindowShouldClose(window)) {
+  GLuint textures[2];
+  int textureSize = 0;
+  glGenTextures(2, textures);
+  glActiveTexture(textures[0]);
+  glBindTexture(GL_TEXTURE_1D, textures[0]);
+  glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, textureSize, 0,
+      GL_RGB, GL_UNSIGNED_BYTE, GetColorMap(textureSize));
+  glGenerateMipmap(GL_TEXTURE_1D);
+
+
+
+  GLuint texture1Location = glGetUniformLocation(shader_programme, "texture1");
+  glUniform1i(texture1Location, 0);
+
+  while (!glfwWindowShouldClose(window)) 
+{
     // wipe the drawing surface clear
+    glClearColor(1, 1, 1, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
 
     glBindVertexArray(vao);
     // Draw triangles
-
-#ifndef PHASE3
-    glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL );
-#else
-    // Add correct number of indices
-    glDrawElements( GL_TRIANGLES, sizeof(tri_indices) / sizeof(tri_indices[0]), GL_UNSIGNED_INT, NULL );
-#endif
+    glDrawElements(GL_TRIANGLES, sizeof(tri_indices) / sizeof(tri_indices[0]), GL_UNSIGNED_INT, NULL);
 
     // update other events like input handling
     glfwPollEvents();
