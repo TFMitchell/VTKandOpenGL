@@ -1,6 +1,8 @@
 /*
 * Project 3A
 * 
+* Hank, you already have a similar copy of this. I fixed all of the issues you directly mentioned in our communications, although there still might be portability issues. 
+* I apologize if that turns out to be the case.
 * 
 * Thomas Mitchell
 */
@@ -16,7 +18,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "proj3_data.h"
+#include "proj2_data.h"
 
 unsigned char*
 GetColorMap(int& textureSize)
@@ -128,21 +130,26 @@ GLuint SetupPhase345DataForRendering()
   return vao;
 }
 
+//as part of debugging, the MVP matrix has been separated
 const char *phase345VertexShader =
   "#version 400\n"
   "layout (location = 0) in vec3 vertex_position;\n"
   "layout (location = 1) in float vertex_data;\n"
   "layout (location = 2) in vec3 vertex_normal;\n"
-  "uniform mat4 MVP;\n"
+  "uniform mat4 V;\n"
+  "uniform mat4 P;\n"
   "uniform vec3 cameraloc;  // Camera position \n"
   "uniform vec3 lightdir;   // Lighting direction \n"
   "uniform vec4 lightcoeff; // Lighting coeff, Ka, Kd, Ks, alpha\n"
   "out float data;\n"
+  "out float depth;\n"
   "out float shading_amount;\n"
   "void main() {\n"
-  "  vec4 position = vec4(vertex_position, 1.0);\n"
-  "  gl_Position = MVP*position;\n"
-  "  data = vertex_data;\n"
+    "vec4 position = vec4(vertex_position, 1.0);\n"
+    "gl_Position = P*V*position;\n"
+   
+    "data = vertex_data;\n"
+    "depth =  (gl_Position.z / gl_Position.w ) ; \n"
 
     "float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
 
@@ -157,10 +164,11 @@ const char *phase345VertexShader =
     "for (int i = 0; i < 3; i++)\n"
     "  viewDirection[i] /= magnitude; \n"
 
-    "float R[] = {2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
+    "vec3 R = vec3(2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
     "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
-    "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]};\n"
-    "magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
+    "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]);\n"
+
+    "magnitude = sqrt(pow(R.x, 2) + pow(R.y, 2) + pow(R.z, 2));\n"
 
     "for (int i = 0; i < 3; i++)\n"
     "  R[i] /= magnitude; \n"
@@ -174,14 +182,17 @@ const char *phase345VertexShader =
 const char *phase345FragmentShader =
   "#version 400\n"
   "in float data;\n"
-  "uniform sampler1D texture1;\n"
+  "in float depth;\n"
+  "uniform sampler1D colorTexture;\n"
+  "uniform sampler1D stripeTexture;\n"
   "in float shading_amount;\n"
   "out vec4 frag_color;\n"
   "void main() {\n"
-    "frag_color = texture(texture1, (data - 1) / 5.0);\n"
-    "frag_color[0] = min(1.f, frag_color[0] * shading_amount);\n"
-    "frag_color[1] = min(1.f, frag_color[1] * shading_amount);\n"
-    "frag_color[2] = min(1.f, frag_color[2] * shading_amount);\n"
+    "vec4 stripeShade = texture(stripeTexture, depth);\n"
+    "frag_color = texture(colorTexture, (data - 1) / 5.0);\n"
+    "frag_color[0] = min(1.f, frag_color[0] * shading_amount * stripeShade.x);\n"
+    "frag_color[1] = min(1.f, frag_color[1] * shading_amount * stripeShade.x);\n"
+    "frag_color[2] = min(1.f, frag_color[2] * shading_amount * stripeShade.x);\n"
 
   "}\n";
 
@@ -256,9 +267,9 @@ int main() {
 
   // Projection matrix : 30° Field of View
   // display size  : 1000x1000
-  // display range : 5 unit <-> 200 units
+  // display range : 5 unit <-> 200 units <- actually 40 to 60
   glm::mat4 Projection = glm::perspective(
-      glm::radians(30.0f), (float)1000 / (float)1000,  5.0f, 200.0f);
+      glm::radians(30.0f), (float)1000 / (float)1000,  40.0f, 60.0f);
   glm::vec3 camera(0, 40, 40);
   glm::vec3 origin(0, 0, 0);
   glm::vec3 up(0, 1, 0);
@@ -268,20 +279,15 @@ int main() {
     origin, // looks at the origin
     up      // and the head is up
   );
-  // Model matrix : an identity matrix (model will be at the origin)
-  glm::mat4 Model = glm::mat4(1.0f);
-  // Our ModelViewProjection : multiplication of our 3 matrices
-  glm::mat4 mvp = Projection * View * Model;
 
-  // Get a handle for our "MVP" uniform
-  // Only during the initialisation
-  GLuint mvploc = glGetUniformLocation(shader_programme, "MVP");
-  // Send our transformation to the currently bound shader, in the "MVP" uniform
-  // This is done in the main loop since each model will have a different MVP matrix
-  // (At least for the M part)
-  glUniformMatrix4fv(mvploc, 1, GL_FALSE, &mvp[0][0]);
+  //these ended up being split up for debugging
+  GLuint vloc = glGetUniformLocation(shader_programme, "V");
+  GLuint ploc = glGetUniformLocation(shader_programme, "P");
 
- // Code block for shading parameters
+  glUniformMatrix4fv(vloc, 1, GL_FALSE, &View[0][0]);
+  glUniformMatrix4fv(ploc, 1, GL_FALSE, &Projection[0][0]);
+
+  //Code block for shading parameters
   GLuint camloc = glGetUniformLocation(shader_programme, "cameraloc");
   glUniform3fv(camloc, 1, &camera[0]);
   glm::vec3 lightdir = glm::normalize(camera - origin);   // Direction of light
@@ -291,26 +297,34 @@ int main() {
   GLuint lcoeloc = glGetUniformLocation(shader_programme, "lightcoeff");
   glUniform4fv(lcoeloc, 1, &lightcoeff[0]);
 
+  //init texture variables
   GLuint textures[2];
   int textureSize = 0;
   glGenTextures(2, textures);
-  glActiveTexture(textures[0]);
+
+  //color texture
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_1D, textures[0]);
   glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, textureSize, 0,
       GL_RGB, GL_UNSIGNED_BYTE, GetColorMap(textureSize));
   glGenerateMipmap(GL_TEXTURE_1D);
+  GLuint colorTexLocation = glGetUniformLocation(shader_programme, "colorTexture");
+  glUniform1i(colorTexLocation, 0);
 
-
-
-  GLuint texture1Location = glGetUniformLocation(shader_programme, "texture1");
-  glUniform1i(texture1Location, 0);
+  //stripe texture
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_1D, textures[1]);
+  glTexImage1D(GL_TEXTURE_1D, 0, GL_RED, textureSize, 0,
+      GL_RED, GL_UNSIGNED_BYTE, GetTigerStripes(textureSize));
+  glGenerateMipmap(GL_TEXTURE_1D);
+  GLuint stripeTexLocation = glGetUniformLocation(shader_programme, "stripeTexture");
+  glUniform1i(stripeTexLocation, 1);
 
   while (!glfwWindowShouldClose(window)) 
 {
     // wipe the drawing surface clear
     glClearColor(1, 1, 1, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
 
     glBindVertexArray(vao);
     // Draw triangles
