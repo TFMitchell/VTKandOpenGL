@@ -637,6 +637,8 @@ class Ball
        // Check if we overlap with another sphere
        // If we do, call CollisionDetected
 
+       //std::cout << getDistance(s) << std::endl;
+
         if (getDistance(s) < 0.f)
             CollisionDetected(s);
     }
@@ -666,13 +668,18 @@ class Ball
     	// However, all of the components (finding normals, dot products, normalizing, etc.) are things we have done before. 
     	// Feel free to write/copy your own helper methods to implement this clearly.	
 
-
         double n[] = 
         {
-            (pos1[0] - pos2[0]) / abs(pos1[0] - pos2[0]),
-            (pos1[1] - pos2[1]) / abs(pos1[1] - pos2[1]),
-            (pos1[2] - pos2[2]) / abs(pos1[2] - pos2[2])
+            (pos1[0] - pos2[0]),
+            (pos1[1] - pos2[1]),
+            (pos1[2] - pos2[2])
         };
+
+        double magnitudeN = sqrt(pow(n[0], 2) + pow(n[1], 2) + pow(n[2], 2));
+
+        for (int i = 0; i < 3; i++)
+            n[i] /= magnitudeN;
+
 
         double vRelative[] =
         {
@@ -716,7 +723,7 @@ class Ball
 int main() 
 {
   // Create the balls
-  const int numBalls = 50;
+  const int numBalls = 15;
   Ball *ballList = new Ball[numBalls];
 
   // Set this to -1 to run forever
@@ -731,40 +738,58 @@ int main()
   // Initialize the balls (necessary to seed randomness)
   for (int i = 0; i < numBalls; i++) {ballList[i].initialize(i);}
 
+  /*ballList[0].pos[0] = 0.f;
+  ballList[0].pos[1] = 0.f;
+  ballList[0].pos[2] = 0.f;
+
+  ballList[0].dir[0] = -.1f;
+  ballList[0].dir[1] = -.1f;
+  ballList[0].dir[2] = 0.f;
+
+  ballList[1].pos[0] = .5f;
+  ballList[1].pos[1] = .5f;
+  ballList[1].pos[2] = 0.f;
+
+  ballList[1].dir[0] = .1f;
+  ballList[1].dir[1] = .1f;
+  ballList[1].dir[2] = .1f;*/
+
 
   // MAIN LOOP
   int tick=0;
   while (!glfwWindowShouldClose(window)) 
   {
-    if(TICK_LIMIT != 0)
-    {
-      // Set up the camera
-      glm::vec3 camera(10, -10, -15);
-      rm.SetView(camera, origin, up);
-      // wipe the drawing surface clear
-      glClearColor(0, 0, 0, 1.0);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-      // Each tick, check all the balls for collisions 
-      for (int i = 0 ; i < numBalls ; i++)
+      if (TICK_LIMIT != 0)
       {
-          // Look for a collision with every other ball
-          for (int j = i+1 ; j < numBalls ; j++)
+          // Set up the camera
+          glm::vec3 camera(10, -10, -15);
+          rm.SetView(camera, origin, up);
+          // wipe the drawing surface clear
+          glClearColor(0, 0, 0, 1.0);
+          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+          // Each tick, check all the balls for collisions 
+          for (int i = 0; i < numBalls; i++)
           {
-              ballList[i].LookForCollision(ballList[j]);
+              // Look for a collision with every other ball
+              for (int j = i + 1; j < numBalls; j++)
+              {
+                  ballList[i].LookForCollision(ballList[j]);
+              }
+              // Move the ball
+              ballList[i].UpdatePosition();
+              // Draw the ball
+              ballList[i].draw(rm);
           }
-          // Move the ball
-          ballList[i].UpdatePosition();
-          // Draw the ball
-          ballList[i].draw(rm);
+          // put the stuff we've been drawing onto the display
+          glfwSwapBuffers(window);
+
+          // Make a "Tick" pass
+          tick++;
+          if (TICK_LIMIT > 0) { TICK_LIMIT--; }
       }
-      // put the stuff we've been drawing onto the display
-      glfwSwapBuffers(window);
-    
-      // Make a "Tick" pass
-      tick++;
-      if(TICK_LIMIT > 0){TICK_LIMIT--;} 
-    }
+
+
 
     // update other events like input handling
     glfwPollEvents();
