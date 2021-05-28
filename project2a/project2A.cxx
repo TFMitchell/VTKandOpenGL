@@ -175,9 +175,9 @@ const char *phase345VertexShader =
     "for (int i = 0; i < 3; i++)\n"
     "  viewDirection[i] /= magnitude; \n"
 
-    "float R[] = {2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
+    "vec3 R = vec3(2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
     "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
-    "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]};\n"
+    "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]);\n"
     "magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
 
     "for (int i = 0; i < 3; i++)\n"

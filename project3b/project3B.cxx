@@ -491,8 +491,31 @@ const char *GetVertexShader()
            "out float shading_amount;\n"
            "void main() {\n"
            "  gl_Position = MVP*vec4(vertex_position, 1.0);\n"
-// SHADING CODE GOES HERE
-           "  shading_amount = 1.0;\n"
+           "  float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
+
+           "  float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
+           "  float viewDirection[3];\n"
+           "  viewDirection[0] = cameraloc[0] - vertex_position[0];\n"
+           "  viewDirection[1] = cameraloc[1] - vertex_position[1];\n"
+           "  viewDirection[2] = cameraloc[2] - vertex_position[2];\n"
+
+           "  float magnitude = sqrt(pow(viewDirection[0], 2) + pow(viewDirection[1], 2) + pow(viewDirection[2], 2));\n"
+
+           "  for (int i = 0; i < 3; i++)\n"
+           "    viewDirection[i] /= magnitude; \n"
+
+           "  vec3 R = vec3(2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
+           "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
+           "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]);\n"
+
+           "  magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
+
+           "  for (int i = 0; i < 3; i++)\n"
+           "    R[i] /= magnitude; \n"
+
+           "  float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
+
+           "  shading_amount = lightcoeff[0] + diffuse + specular;\n"
            "}\n"
          );
    return vertexShader;
@@ -575,7 +598,7 @@ class Ball
     {
        // STEP 3: Uncomment and run
        // Keep moving in the direction we should go
-       /*
+       
        pos[0] += dir[0]*0.1;
        pos[1] += dir[1]*0.1;
        pos[2] += dir[2]*0.1;
@@ -593,24 +616,35 @@ class Ball
            dir[2] *= -1;
        if (pos[2] > boundingBox[5])
            dir[2] *= -1;  
-       */
+       
     }
     
     double getDistance(Ball &s)
     {
     	// Return the distance between these two balls
-	return 0.0;
+
+        double distanceBetweenCenters = sqrt(
+                                            pow(pos[0] - s.pos[0], 2)
+                                            + pow(pos[1] - s.pos[1], 2)
+                                            + pow(pos[2] - s.pos[2], 2)
+                                            );
+
+	    return distanceBetweenCenters - s.radius - radius;
     }
 
     void LookForCollision(Ball &s)
     {
        // Check if we overlap with another sphere
        // If we do, call CollisionDetected
+
+        if (getDistance(s) < 0.f)
+            CollisionDetected(s);
     }
     
     void CollisionDetected(Ball &s)
     {        
         // update the ball's directions and maybe do other stuff
+        collideDir(pos, dir, s.pos, s.dir);
     }
     
     void collideDir(double pos1[3], double dir1[3], double pos2[3], double dir2[3])
@@ -631,6 +665,36 @@ class Ball
     	// This is the intuition for deriving the above vector math. 
     	// However, all of the components (finding normals, dot products, normalizing, etc.) are things we have done before. 
     	// Feel free to write/copy your own helper methods to implement this clearly.	
+
+
+        double n[] = 
+        {
+            (pos1[0] - pos2[0]) / abs(pos1[0] - pos2[0]),
+            (pos1[1] - pos2[1]) / abs(pos1[1] - pos2[1]),
+            (pos1[2] - pos2[2]) / abs(pos1[2] - pos2[2])
+        };
+
+        double vRelative[] =
+        {
+            dir1[0] - dir2[0],
+            dir1[1] - dir2[1],
+            dir1[2] - dir2[2]
+        };
+
+        double dotProdVelN = vRelative[0] * n[0] + vRelative[1] * n[1] + vRelative[2] * n[2];
+
+        double vNormal[] =
+        {
+            dotProdVelN * n[0],
+            dotProdVelN * n[1],
+            dotProdVelN * n[2]
+        };
+
+        for (int i = 0; i < 3; i++)
+        {
+            dir1[i] -= vNormal[i];
+            dir2[i] += vNormal[i];
+        }
     }
     
     // VARIABLES
@@ -652,7 +716,7 @@ class Ball
 int main() 
 {
   // Create the balls
-  const int numBalls = 1;
+  const int numBalls = 50;
   Ball *ballList = new Ball[numBalls];
 
   // Set this to -1 to run forever
