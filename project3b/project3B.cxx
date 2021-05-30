@@ -518,24 +518,8 @@ class Ball
 
         if (getDistance(s) < 0.f)
             CollisionDetected(s);
-        else
-            tSinceAccident++;
-    }
-    
-    void CollisionDetected(Ball &s)
-    {        
-        // update the ball's directions and maybe do other stuff
-        collideDir(pos, dir, s.pos, s.dir);
 
-        if (tSinceAccident < 50)
-        {
-            color[0] += 0.7 * (1 - color[0]);
-            color[1] -= 0.1 * color[1];
-            color[2] -= 0.1 * color[2];
-
-            radius -= 0.25 * radius;
-        }
-        else
+        else if (tSinceAccident++ % 50 == 0)
         {
             color[0] -= 0.05 * color[0];
             color[1] += 0.35 * (1 - color[1]);
@@ -543,6 +527,18 @@ class Ball
 
             radius += 0.01 * (1 - radius);
         }
+    }
+    
+    void CollisionDetected(Ball &s)
+    {        
+        // update the ball's directions and maybe do other stuff
+        collideDir(pos, dir, s.pos, s.dir);
+
+        color[0] += 0.7 * (1 - color[0]);
+        color[1] -= 0.1 * color[1];
+        color[2] -= 0.1 * color[2];
+
+        radius -= 0.25 * radius;
 
         tSinceAccident = 0;
     }
