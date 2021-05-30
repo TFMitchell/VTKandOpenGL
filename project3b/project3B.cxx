@@ -511,7 +511,7 @@ class Ball
 	    return distanceBetweenCenters - s.radius - radius;
     }
 
-    void LookForCollision(Ball &s, bool &hasCollided)
+    void LookForCollision(Ball &s)
     {
        // Check if we overlap with another sphere
        // If we do, call CollisionDetected
@@ -519,7 +519,6 @@ class Ball
         if (getDistance(s) < 0.f)
         {
             CollisionDetected(s);
-            hasCollided = true;
         }
     }
     
@@ -637,7 +636,7 @@ int main()
           for (int i = 0; i < numBalls; i++)
           {
               //check if we need to make it bigger (if it hasn't run into anything in a while)
-              if (ballList[i].tSinceAccident > 0 && ballList[i].tSinceAccident % 50 == 0)
+              if (ballList[i].tSinceAccident++ % 50 == 0)
               {
                   ballList[i].color[0] -= 0.05 * ballList[i].color[0];
                   ballList[i].color[1] += 0.35 * (1 - ballList[i].color[1]);
@@ -646,14 +645,8 @@ int main()
               }
 
               // Look for a collision with every other ball
-              bool hasCollided = false; 
               for (int j = i + 1; j < numBalls; j++)
-                  ballList[i].LookForCollision(ballList[j], hasCollided);
-         
-              //if we got through all of the other spheres without a collision, increment appropriate member variable
-              //this is slightly crude as for each collision, the ball with the higher number will have its tSinceAccident incremented here, but this should be insignificant
-              if (!hasCollided)
-                  ballList[i].tSinceAccident++;
+                  ballList[i].LookForCollision(ballList[j]);
 
               // Move the ball
               ballList[i].UpdatePosition();
