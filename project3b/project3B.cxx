@@ -1,6 +1,8 @@
 /*
 * Project 3B
 * 
+* Although the output is not consistent with that of the specs on Windows, I have been testing concurrently on the provided virtual Linux box, which has the correct output for each of the steps.
+* 
 * Thomas Mitchell
 * 
 */
@@ -28,25 +30,6 @@ class RenderManager;
 
 const char *GetVertexShader();
 const char *GetFragmentShader();
-
-// This file is split into four parts:
-// - Part 1: code to set up spheres and cylinders
-// - Part 2: a "RenderManager" module
-// - Part 3: main function
-// - Part 4: SetUpDog and the shader programs -- things you modify
-//
-// It is intended that you will only need to modify code in Part 4.
-// That said, you will need functions in Part 2 and should review
-// those functions.
-// Further, you are encouraged to look through the entire code base.
-//
-
-
-//
-//
-// PART 1: code to set up spheres and cylinders
-//
-//
 
 class Triangle
 {
@@ -91,63 +74,8 @@ void PushVertex(std::vector<float>& coords,
   coords.push_back(v.z);
 }
 
-//
-// Sets up a cylinder that is the circle x^2+y^2=1 extruded from
-// Z=0 to Z=1.
-//
-void GetCylinderData(std::vector<float>& coords, std::vector<float>& normals)
-{
-  int nfacets = 30;
-  for (int i = 0 ; i < nfacets ; i++)
-  {
-    double angle = 3.14159*2.0*i/nfacets;
-    double nextAngle = (i == nfacets-1 ? 0 : 3.14159*2.0*(i+1)/nfacets);
-    glm::vec3 fnormal(0.0f, 0.0f, 1.0f);
-    glm::vec3 bnormal(0.0f, 0.0f, -1.0f);
-    glm::vec3 fv0(0.0f, 0.0f, 1.0f);
-    glm::vec3 fv1(cos(angle), sin(angle), 1);
-    glm::vec3 fv2(cos(nextAngle), sin(nextAngle), 1);
-    glm::vec3 bv0(0.0f, 0.0f, 0.0f);
-    glm::vec3 bv1(cos(angle), sin(angle), 0);
-    glm::vec3 bv2(cos(nextAngle), sin(nextAngle), 0);
-    // top and bottom circle vertices
-    PushVertex(coords, fv0);
-    PushVertex(normals, fnormal);
-    PushVertex(coords, fv1);
-    PushVertex(normals, fnormal);
-    PushVertex(coords, fv2);
-    PushVertex(normals, fnormal);
-    PushVertex(coords, bv0);
-    PushVertex(normals, bnormal);
-    PushVertex(coords, bv1);
-    PushVertex(normals, bnormal);
-    PushVertex(coords, bv2);
-    PushVertex(normals, bnormal);
-    // curves surface vertices
-    glm::vec3 v1normal(cos(angle), sin(angle), 0);
-    glm::vec3 v2normal(cos(nextAngle), sin(nextAngle), 0);
-    //fv1 fv2 bv1
-    PushVertex(coords, fv1);
-    PushVertex(normals, v1normal);
-    PushVertex(coords, fv2);
-    PushVertex(normals, v2normal);
-    PushVertex(coords, bv1);
-    PushVertex(normals, v1normal);
-    //fv2 bv1 bv2
-    PushVertex(coords, fv2);
-    PushVertex(normals, v2normal);
-    PushVertex(coords, bv1);
-    PushVertex(normals, v1normal);
-    PushVertex(coords, bv2);
-    PushVertex(normals, v2normal);
-  }
-}
-
-//
 // Sets up a sphere with equation x^2+y^2+z^2=1
-//
-void
-GetSphereData(std::vector<float>& coords, std::vector<float>& normals)
+void GetSphereData(std::vector<float>& coords, std::vector<float>& normals)
 {
   int recursionLevel = 3;
   std::vector<Triangle> list;
@@ -193,13 +121,6 @@ GetSphereData(std::vector<float>& coords, std::vector<float>& normals)
     }
   }
 }
-
-
-//
-//
-// PART 2: RenderManager module
-//
-//
 
 void _print_shader_info_log(GLuint shader_index) {
   int max_length = 2048;
@@ -408,16 +329,8 @@ void RenderManager::SetUpGeometry()
   SetUpVBOs(sphereCoords, sphereNormals, 
             sphere_points_vbo, sphere_normals_vbo, sphere_indices_vbo);
 
-  std::vector<float> cylCoords;
-  std::vector<float> cylNormals;
-  GetCylinderData(cylCoords, cylNormals);
-  cylinderNumPrimitives = cylCoords.size() / 3;
-  GLuint cyl_points_vbo, cyl_normals_vbo, cyl_indices_vbo;
-  SetUpVBOs(cylCoords, cylNormals, 
-            cyl_points_vbo, cyl_normals_vbo, cyl_indices_vbo);
-
-  GLuint vao[2];
-  glGenVertexArrays(2, vao);
+  GLuint vao[1];
+  glGenVertexArrays(1, vao);
 
   glBindVertexArray(vao[SPHERE]);
   sphereVAO = vao[SPHERE];
@@ -429,23 +342,8 @@ void RenderManager::SetUpGeometry()
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
 
-  glBindVertexArray(vao[CYLINDER]);
-  cylinderVAO = vao[CYLINDER];
-  glBindBuffer(GL_ARRAY_BUFFER, cyl_points_vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-  glBindBuffer(GL_ARRAY_BUFFER, cyl_normals_vbo);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cyl_indices_vbo);
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
 }
 
-
-/*
-// ============
-// MATRIX TYPES
-// ============
-*/
 // Rotation matrix
 glm::mat4 RotateMatrix(float degrees, float x, float y, float z)
 {
@@ -470,12 +368,6 @@ glm::mat4 TranslateMatrix(double x, double y, double z)
    return glm::translate(identity, translate);
 }
 
-
-/*
-// ============
-//   SHADERS
-// ============
-*/
 // Vertex shader
 const char *GetVertexShader()
 {
@@ -540,17 +432,6 @@ const char *GetFragmentShader()
 }
 
 
-
-
-// ========================================================================
-//
-// PART3: main functions
-//
-/*
-// ============
-// SPRITE CLASS
-// ============
-*/
 const double boundingBox[] = {-5,5, -5,1, -5,5};
 class Ball
 {
@@ -590,7 +471,6 @@ class Ball
     } 
     // =================
     
-    
     // ============
     // CHANGE THESE
     // ============
@@ -615,8 +495,7 @@ class Ball
        if (pos[2] < boundingBox[4])
            dir[2] *= -1;
        if (pos[2] > boundingBox[5])
-           dir[2] *= -1;  
-       
+           dir[2] *= -1;        
     }
     
     double getDistance(Ball &s)
@@ -637,16 +516,35 @@ class Ball
        // Check if we overlap with another sphere
        // If we do, call CollisionDetected
 
-       //std::cout << getDistance(s) << std::endl;
-
         if (getDistance(s) < 0.f)
             CollisionDetected(s);
+        else
+            tSinceAccident++;
     }
     
     void CollisionDetected(Ball &s)
     {        
         // update the ball's directions and maybe do other stuff
         collideDir(pos, dir, s.pos, s.dir);
+
+        if (tSinceAccident < 50)
+        {
+            color[0] += 0.7 * (1 - color[0]);
+            color[1] -= 0.1 * color[1];
+            color[2] -= 0.1 * color[2];
+
+            radius -= 0.25 * radius;
+        }
+        else
+        {
+            color[0] -= 0.05 * color[0];
+            color[1] += 0.35 * (1 - color[1]);
+            color[2] += 0.35 * (1 - color[2]);
+
+            radius += 0.01 * (1 - radius);
+        }
+
+        tSinceAccident = 0;
     }
     
     void collideDir(double pos1[3], double dir1[3], double pos2[3], double dir2[3])
@@ -680,7 +578,6 @@ class Ball
         for (int i = 0; i < 3; i++)
             n[i] /= magnitudeN;
 
-
         double vRelative[] =
         {
             dir1[0] - dir2[0],
@@ -712,18 +609,10 @@ class Ball
     double radius;
 };
 
-
-
-/*
-// ============
-//     MAIN     (should only need to change numBalls)
-// ============
-*/
-
 int main() 
 {
   // Create the balls
-  const int numBalls = 15;
+  const int numBalls = 50;
   Ball *ballList = new Ball[numBalls];
 
   // Set this to -1 to run forever
@@ -737,23 +626,6 @@ int main()
   
   // Initialize the balls (necessary to seed randomness)
   for (int i = 0; i < numBalls; i++) {ballList[i].initialize(i);}
-
-  /*ballList[0].pos[0] = 0.f;
-  ballList[0].pos[1] = 0.f;
-  ballList[0].pos[2] = 0.f;
-
-  ballList[0].dir[0] = -.1f;
-  ballList[0].dir[1] = -.1f;
-  ballList[0].dir[2] = 0.f;
-
-  ballList[1].pos[0] = .5f;
-  ballList[1].pos[1] = .5f;
-  ballList[1].pos[2] = 0.f;
-
-  ballList[1].dir[0] = .1f;
-  ballList[1].dir[1] = .1f;
-  ballList[1].dir[2] = .1f;*/
-
 
   // MAIN LOOP
   int tick=0;
@@ -788,8 +660,6 @@ int main()
           tick++;
           if (TICK_LIMIT > 0) { TICK_LIMIT--; }
       }
-
-
 
     // update other events like input handling
     glfwPollEvents();
