@@ -511,36 +511,33 @@ class Ball
 	    return distanceBetweenCenters - s.radius - radius;
     }
 
-    void LookForCollision(Ball &s)
+    void LookForCollision(Ball &s, bool &hasCollided)
     {
        // Check if we overlap with another sphere
        // If we do, call CollisionDetected
 
         if (getDistance(s) < 0.f)
-            CollisionDetected(s);
-
-        else if (tSinceAccident++ % 50 == 0)
         {
-            color[0] -= 0.05 * color[0];
-            color[1] += 0.35 * (1 - color[1]);
-            color[2] += 0.35 * (1 - color[2]);
-
-            radius += 0.01 * (1 - radius);
+            CollisionDetected(s);
+            hasCollided = true;
         }
     }
     
     void CollisionDetected(Ball &s)
     {        
-        // update the ball's directions and maybe do other stuff
         collideDir(pos, dir, s.pos, s.dir);
 
         color[0] += 0.7 * (1 - color[0]);
         color[1] -= 0.1 * color[1];
         color[2] -= 0.1 * color[2];
-
         radius -= 0.25 * radius;
-
         tSinceAccident = 0;
+
+        s.color[0] += 0.7 * (1 - s.color[0]);
+        s.color[1] -= 0.1 * s.color[1];
+        s.color[2] -= 0.1 * s.color[2];
+        s.radius -= 0.25 * s.radius;
+        s.tSinceAccident = 0;
     }
     
     void collideDir(double pos1[3], double dir1[3], double pos2[3], double dir2[3])
@@ -639,11 +636,25 @@ int main()
           // Each tick, check all the balls for collisions 
           for (int i = 0; i < numBalls; i++)
           {
-              // Look for a collision with every other ball
-              for (int j = i + 1; j < numBalls; j++)
+              //check if we need to make it bigger (if it hasn't run into anything in a while)
+              if (ballList[i].tSinceAccident > 0 && ballList[i].tSinceAccident % 50 == 0)
               {
-                  ballList[i].LookForCollision(ballList[j]);
+                  ballList[i].color[0] -= 0.05 * ballList[i].color[0];
+                  ballList[i].color[1] += 0.35 * (1 - ballList[i].color[1]);
+                  ballList[i].color[2] += 0.35 * (1 - ballList[i].color[2]);
+                  ballList[i].radius += 0.01 * (1 - ballList[i].radius);
               }
+
+              // Look for a collision with every other ball
+              bool hasCollided = false; 
+              for (int j = i + 1; j < numBalls; j++)
+                  ballList[i].LookForCollision(ballList[j], hasCollided);
+         
+              //if we got through all of the other spheres without a collision, increment appropriate member variable
+              //this is slightly crude as for each collision, the ball with the higher number will have its tSinceAccident incremented here, but this should be insignificant
+              if (!hasCollided)
+                  ballList[i].tSinceAccident++;
+
               // Move the ball
               ballList[i].UpdatePosition();
               // Draw the ball
