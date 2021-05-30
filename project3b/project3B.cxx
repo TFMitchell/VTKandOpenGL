@@ -517,9 +517,7 @@ class Ball
        // If we do, call CollisionDetected
 
         if (getDistance(s) < 0.f)
-        {
             CollisionDetected(s);
-        }
     }
     
     void CollisionDetected(Ball &s)
@@ -635,15 +633,6 @@ int main()
           // Each tick, check all the balls for collisions 
           for (int i = 0; i < numBalls; i++)
           {
-              //check if we need to make it bigger (if it hasn't run into anything in a while)
-              if (++ballList[i].tSinceAccident % 50 == 0)
-              {
-                  ballList[i].color[0] -= 0.05 * ballList[i].color[0];
-                  ballList[i].color[1] += 0.35 * (1 - ballList[i].color[1]);
-                  ballList[i].color[2] += 0.35 * (1 - ballList[i].color[2]);
-                  ballList[i].radius += 0.01 * (1 - ballList[i].radius);
-              }
-
               // Look for a collision with every other ball
               for (int j = i + 1; j < numBalls; j++)
                   ballList[i].LookForCollision(ballList[j]);
@@ -655,6 +644,19 @@ int main()
           }
           // put the stuff we've been drawing onto the display
           glfwSwapBuffers(window);
+
+          //loop again to see which ones have a tSinceAccident of 0
+          for (int i = 0; i < numBalls; i++)
+          {
+              //check if we need to make it bigger (if it hasn't run into anything in a while)
+              if (++ballList[i].tSinceAccident % 51 == 0) //incrementing before comparison saves us a comparison to zero, but requires modulo by 51 instead of 50
+              {
+                  ballList[i].color[0] -= 0.05 * ballList[i].color[0];
+                  ballList[i].color[1] += 0.35 * (1 - ballList[i].color[1]);
+                  ballList[i].color[2] += 0.35 * (1 - ballList[i].color[2]);
+                  ballList[i].radius += 0.01 * (1 - ballList[i].radius);
+              }
+          }
 
           // Make a "Tick" pass
           tick++;
