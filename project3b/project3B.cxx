@@ -636,7 +636,7 @@ int main()
           for (int i = 0; i < numBalls; i++)
           {
               //check if we need to make it bigger (if it hasn't run into anything in a while)
-              if (ballList[i].tSinceAccident++ % 50 == 0)
+              if (++ballList[i].tSinceAccident % 50 == 0)
               {
                   ballList[i].color[0] -= 0.05 * ballList[i].color[0];
                   ballList[i].color[1] += 0.35 * (1 - ballList[i].color[1]);
