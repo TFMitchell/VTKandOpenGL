@@ -454,11 +454,13 @@ class Ball
     	srand(id*2);
     	// Set position and dir to random values
     	pos[0] = (double)rand()/RAND_MAX*6.0-3.0;
-  	pos[1] = (double)rand()/RAND_MAX*6.0-5.0;
-  	pos[2] = (double)rand()/RAND_MAX*6.0-3.0;
-  	dir[0] = (double)rand()/RAND_MAX*0.4-0.2;
-  	dir[1] = (double)rand()/RAND_MAX*0.4-0.2;
-  	dir[2] = (double)rand()/RAND_MAX*0.4-0.2;
+  	    pos[1] = (double)rand()/RAND_MAX*6.0-5.0;
+  	    pos[2] = (double)rand()/RAND_MAX*6.0-3.0;
+  	    dir[0] = (double)rand()/RAND_MAX*0.4-0.2;
+  	    dir[1] = (double)rand()/RAND_MAX*0.4-0.2;
+  	    dir[2] = (double)rand()/RAND_MAX*0.4-0.2;
+
+        cerr << "Initialized ID " << id << " to be at position " << pos[0] << ", " << pos[1] << ", " << pos[2] <<" and with direction " << dir[0] << ", " << dir[1] << ", " << dir[2] << endl;
     };
     
     void draw(RenderManager &rm)
