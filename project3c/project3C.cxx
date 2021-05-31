@@ -21,7 +21,7 @@ using std::cerr;
 
 #define M_PI 3.14159265358979323846
 
-// Macros to define the level of recusion for each sphere
+// Macros to define the level of recursion for each sphere
 #define L1 5
 #define L2 6
 #define L3 7
@@ -160,10 +160,9 @@ void GetPlaneData(std::vector<float>& coords, std::vector<float>& normals){
 //
 // Sets up a sphere with equation x^2+y^2+z^2=1
 //
-    void
+void
 GetSphereData(std::vector<float>& coords, std::vector<float>& normals, int recursionLevel)
 {
-    /* int recursionLevel = 3; */
     std::vector<Triangle> list;
     {
         Triangle t;
@@ -173,9 +172,7 @@ GetSphereData(std::vector<float>& coords, std::vector<float>& normals, int recur
         list.push_back(t);
     }
     for (int r = 0 ; r < recursionLevel ; r++)
-    {
         list = SplitTriangle(list);
-    }
 
     for (int octant = 0 ; octant < 8 ; octant++)
     {
@@ -535,8 +532,14 @@ int main()
     glm::vec3 up(0, 1, 0);
 
     // Vector that holds all the balls
-    std::vector<Ball> balls;
-    //TODO: ADD CODE!
+    std::vector<Ball> balls(numBalls);
+
+    for (int i = 0; i < numBalls; i++)
+    {
+        balls.at(i).x = (double)rand() / RAND_MAX * 20 - 10;
+        balls.at(i).z = (double)rand() / RAND_MAX * 20 - 10;
+        balls.at(i).BP.h0 = (double)rand() / RAND_MAX * 30 + 10;
+    }
     
     glm::mat4 identity(1.0f);
 
@@ -586,12 +589,12 @@ int main()
 }
 
 
-
 void
 UpdateBallPhysics(Ball& ball){
     auto& ball_physics = ball.BP;
     // If the ball is still bouncing, calculate the new height
-    if (ball_physics.hmax > ball_physics.hstop){
+    if (ball_physics.hmax > ball_physics.hstop)
+    {
         if (ball_physics.freefall){
             double hnew = ball_physics.h + ball_physics.v*ball_physics.dt - 0.5*ball_physics.g*ball_physics.dt*ball_physics.dt;
             if (hnew<0){
@@ -614,26 +617,54 @@ UpdateBallPhysics(Ball& ball){
             ball_physics.h = 0;
         }
         ball_physics.hmax = 0.5*ball_physics.vmax*ball_physics.vmax/ball_physics.g;
-    } else { // When its done, make a new ball
-        //TODO: ADD CODE!
+    } 
+    else // When its done, make a new ball
+    { 
+        ball.x = (double)rand() / RAND_MAX * 20 - 10;
+        ball.z = (double)rand() / RAND_MAX * 20 - 10;
+        ball.BP.h0 = (double)rand() / RAND_MAX * 30 + 10;
     }
 }
 
 
-
-    void
+void
 BounceBall(std::vector<Ball> &balls, RenderManager &rm, glm::vec3 camPos)
 {
-    //TODO: ADD CODE! - YOU'LL WANT TO CALL UpdateBallPhysics() here
+    for (int i = 0; i < numBalls; i++)
+    {
+        UpdateBallPhysics(balls.at(i));
+        balls.at(i).distToCamera = sqrt(pow(balls.at(i).x - camPos[0], 2)
+                                        + pow(balls.at(i).BP.h - camPos[1], 2)
+                                        + pow(balls.at(i).z - camPos[2], 2));
+    }
+    
+    sort(balls.begin(), balls.end(), [](Ball ball1, Ball ball2) {return ball1.distToCamera < ball2.distToCamera;});
+
+
+    for (int i = 0; i < numBalls / 3; i++)
+    {
+        glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
+        glm::mat4 scale = ScaleMatrix(.3, .3, .3);
+        rm.Render(RenderManager::SPHERE3, translate*scale);
+    }
+    for (int i = numBalls / 3; i < 2 * numBalls / 3; i++)
+    {
+        glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
+        glm::mat4 scale = ScaleMatrix(.3, .3, .3);
+        rm.Render(RenderManager::SPHERE2, translate * scale);
+    }
+    for (int i = 2 * numBalls / 3; i < numBalls; i++)
+    {
+        glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
+        glm::mat4 scale = ScaleMatrix(.3, .3, .3);
+        rm.Render(RenderManager::SPHERE1, translate * scale);
+    }
 }
-
-
-
 
 
 const char *GetVertexShader()
 {
-    static char vertexShader[1024];
+    static char vertexShader[2048];
     strcpy(vertexShader, 
             "#version 400\n"
             "layout (location = 0) in vec3 vertex_position;\n"
@@ -644,9 +675,31 @@ const char *GetVertexShader()
             "uniform vec4 lightcoeff; // Lighting coeff, Ka, Kd, Ks, alpha\n"
             "out float shading_amount;\n"
             "void main() {\n"
-            "  gl_Position = MVP*vec4(vertex_position, 1.0);\n"
-// ADD SHADING HERE
-            "  shading_amount = 1;\n"
+                "gl_Position = MVP*vec4(vertex_position, 1.0);\n"
+                "float diffuse = max(0.f, (lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2])) * lightcoeff[1];\n"
+
+                "float dotProdLightNormal =  lightdir[0] * vertex_normal[0] + lightdir[1] * vertex_normal[1] + lightdir[2] * vertex_normal[2];\n"
+                "float viewDirection[3];\n"
+                "viewDirection[0] = cameraloc[0] - vertex_position[0];\n"
+                "viewDirection[1] = cameraloc[1] - vertex_position[1];\n"
+                "viewDirection[2] = cameraloc[2] - vertex_position[2];\n"
+
+                "float magnitude = sqrt(pow(viewDirection[0], 2) + pow(viewDirection[1], 2) + pow(viewDirection[2], 2));\n"
+
+                "for (int i = 0; i < 3; i++)\n"
+                "  viewDirection[i] /= magnitude; \n"
+
+                "vec3 R = vec3(2.f * dotProdLightNormal * vertex_normal[0] - lightdir[0],\n"
+                "  2.f * dotProdLightNormal * vertex_normal[1] - lightdir[1], \n"
+                "  2.f * dotProdLightNormal * vertex_normal[2] - lightdir[2]);\n"
+                "magnitude = sqrt(pow(R[0], 2) + pow(R[1], 2) + pow(R[2], 2));\n"
+
+                "for (int i = 0; i < 3; i++)\n"
+                "  R[i] /= magnitude; \n"
+
+                "float specular =  pow(max(0.f, viewDirection[0] * R[0] + viewDirection[1] * R[1] + viewDirection[2] * R[2]), lightcoeff[3]) * lightcoeff[2];\n"
+
+                "shading_amount = lightcoeff[0] + diffuse + specular;\n"
             "}\n"
             );
     return vertexShader;
@@ -666,4 +719,3 @@ const char *GetFragmentShader()
           );
     return fragmentShader;
 }
-
