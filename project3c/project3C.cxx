@@ -1,3 +1,12 @@
+/*
+* CIS 441 - Project 3C
+* 
+* Please see Findings.txt for more information.
+* 
+* Thomas Mitchell
+* 
+*/
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +36,7 @@ using std::cerr;
 #define L3 7
 
 // How many number of balls to render
-#define numBalls 100
+#define numBalls 200
 
 class RenderManager;
 
@@ -538,7 +547,12 @@ int main()
     {
         balls.at(i).x = (double)rand() / RAND_MAX * 20 - 10;
         balls.at(i).z = (double)rand() / RAND_MAX * 20 - 10;
-        balls.at(i).BP.h0 = (double)rand() / RAND_MAX * 30 + 10;
+        double y = (double)rand() / RAND_MAX * 30 + 10;
+        balls.at(i).BP.h0 = y;
+        balls.at(i).BP.h = y;
+        balls.at(i).BP.hmax = y;
+        balls.at(i).BP.t_last = -1.f * sqrt(2.f * y / balls.at(i).BP.g);
+        balls.at(i).BP.vmax = sqrt(2.f * y * balls.at(i).BP.g);
     }
     
     glm::mat4 identity(1.0f);
@@ -550,6 +564,7 @@ int main()
     while (!glfwWindowShouldClose(window)) 
     {
         t = glfwGetTime();
+
         double angle=counter/1000.0*2*M_PI;
         counter++;
         // print FPS to console
@@ -620,9 +635,10 @@ UpdateBallPhysics(Ball& ball){
     } 
     else // When its done, make a new ball
     { 
-        ball.x = (double)rand() / RAND_MAX * 20 - 10;
-        ball.z = (double)rand() / RAND_MAX * 20 - 10;
-        ball.BP.h0 = (double)rand() / RAND_MAX * 30 + 10;
+        ball.BP.h = ball.BP.h0;
+        ball.BP.hmax = ball.BP.h0;
+        ball.BP.t_last = -1.f * sqrt(2.f * ball.BP.h0 / ball.BP.g);
+        ball.BP.vmax = sqrt(2.f * ball.BP.hmax * ball.BP.g);
     }
 }
 
@@ -645,18 +661,21 @@ BounceBall(std::vector<Ball> &balls, RenderManager &rm, glm::vec3 camPos)
     {
         glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
         glm::mat4 scale = ScaleMatrix(.3, .3, .3);
-        rm.Render(RenderManager::SPHERE3, translate*scale);
+        rm.SetColor(1.f, 0.f, 0.f);
+        rm.Render(RenderManager::SPHERE3, translate * scale);
     }
     for (int i = numBalls / 3; i < 2 * numBalls / 3; i++)
     {
         glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
         glm::mat4 scale = ScaleMatrix(.3, .3, .3);
+        rm.SetColor(0.f, 1.f, 0.f);
         rm.Render(RenderManager::SPHERE2, translate * scale);
     }
     for (int i = 2 * numBalls / 3; i < numBalls; i++)
     {
         glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
         glm::mat4 scale = ScaleMatrix(.3, .3, .3);
+        rm.SetColor(0.f, 0.f, 1.f);
         rm.Render(RenderManager::SPHERE1, translate * scale);
     }
 }
