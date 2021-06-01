@@ -341,7 +341,6 @@ void RenderManager::SetUpGeometry()
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphere_indices_vbo);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
-
 }
 
 // Rotation matrix
@@ -459,8 +458,6 @@ class Ball
   	    dir[0] = (double)rand()/RAND_MAX*0.4-0.2;
   	    dir[1] = (double)rand()/RAND_MAX*0.4-0.2;
   	    dir[2] = (double)rand()/RAND_MAX*0.4-0.2;
-
-        cerr << "Initialized ID " << id << " to be at position " << pos[0] << ", " << pos[1] << ", " << pos[2] <<" and with direction " << dir[0] << ", " << dir[1] << ", " << dir[2] << endl;
     };
     
     void draw(RenderManager &rm)

@@ -1,7 +1,7 @@
 /*
 * CIS 441 - Project 3C
 * 
-* Please see Findings.txt for more information.
+* Please see Findings.pdf for more information.
 * 
 * Thomas Mitchell
 * 
@@ -36,7 +36,7 @@ using std::cerr;
 #define L3 7
 
 // How many number of balls to render
-#define numBalls 200
+#define numBalls 100
 
 class RenderManager;
 
@@ -554,8 +554,6 @@ int main()
         balls.at(i).BP.t_last = -1.f * sqrt(2.f * y / balls.at(i).BP.g);
         balls.at(i).BP.vmax = sqrt(2.f * y * balls.at(i).BP.g);
     }
-    
-    glm::mat4 identity(1.0f);
 
     int counter=0;
     double t, t0;
@@ -633,7 +631,7 @@ UpdateBallPhysics(Ball& ball){
         }
         ball_physics.hmax = 0.5*ball_physics.vmax*ball_physics.vmax/ball_physics.g;
     } 
-    else // When its done, make a new ball
+    else // When its done, make a new ball. I decided to make the new ball to be a duplicate of the original one, but falling from the original height of course
     { 
         ball.BP.h = ball.BP.h0;
         ball.BP.hmax = ball.BP.h0;
@@ -646,6 +644,7 @@ UpdateBallPhysics(Ball& ball){
 void
 BounceBall(std::vector<Ball> &balls, RenderManager &rm, glm::vec3 camPos)
 {
+    //update each ball's physics and store its distance from camera
     for (int i = 0; i < numBalls; i++)
     {
         UpdateBallPhysics(balls.at(i));
@@ -654,16 +653,18 @@ BounceBall(std::vector<Ball> &balls, RenderManager &rm, glm::vec3 camPos)
                                         + pow(balls.at(i).z - camPos[2], 2));
     }
     
+    //sort the balls vector by distance to camera. Makes the next step easier
     sort(balls.begin(), balls.end(), [](Ball ball1, Ball ball2) {return ball1.distToCamera < ball2.distToCamera;});
 
-
+    //render the first third of balls in the vector. This uses the highest-quality rendering
     for (int i = 0; i < numBalls / 3; i++)
     {
-        glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
-        glm::mat4 scale = ScaleMatrix(.3, .3, .3);
+        glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z); 
+        glm::mat4 scale = ScaleMatrix(.3, .3, .3); //radius is .3 for all of the balls
         rm.SetColor(1.f, 0.f, 0.f);
         rm.Render(RenderManager::SPHERE3, translate * scale);
     }
+    //middle third
     for (int i = numBalls / 3; i < 2 * numBalls / 3; i++)
     {
         glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
@@ -671,6 +672,7 @@ BounceBall(std::vector<Ball> &balls, RenderManager &rm, glm::vec3 camPos)
         rm.SetColor(0.f, 1.f, 0.f);
         rm.Render(RenderManager::SPHERE2, translate * scale);
     }
+    //furthest third
     for (int i = 2 * numBalls / 3; i < numBalls; i++)
     {
         glm::mat4 translate = TranslateMatrix(balls.at(i).x, balls.at(i).BP.h, balls.at(i).z);
