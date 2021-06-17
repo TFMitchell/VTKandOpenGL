@@ -1,5 +1,5 @@
 /*
-* CIS 441 - Project 3C
+* Project 3C
 * 
 * Please see Findings.pdf for more information.
 * 

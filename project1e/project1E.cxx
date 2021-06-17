@@ -1,5 +1,5 @@
 /*
-* CIS 441 Project 1E
+* Project 1E
 * 
 * I'll try my best to avoid using syntax Hank's compiler doesn't support.
 * 

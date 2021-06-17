@@ -1,5 +1,5 @@
 /*
-* Project 1A CIS 441.
+* Project 1A
 * 
 * Thomas Mitchell
 */

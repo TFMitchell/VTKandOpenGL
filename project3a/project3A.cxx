@@ -1,8 +1,6 @@
 /*
 * Project 3A
 * 
-* Hank, you already have a similar copy of this. I fixed all of the issues you directly mentioned in our communications, although there still might be portability issues. 
-* I apologize if that turns out to be the case.
 * 
 * Thomas Mitchell
 */

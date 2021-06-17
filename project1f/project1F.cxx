@@ -1,5 +1,5 @@
 /*
-* CIS 441 Project 1F
+* Project 1F
 * 
 * The .mp4 for the output I made (with ffmpeg and WSL) will be uploaded to Canvas, as per your in-class instructions. I compared the output to the given one, and it looked spot-on.
 * Additionally, the output png for the first frame has the same hash as your example png, so I think this should be full credit. I'm not sure why the example .mp4 had a resultion of less than 1000x1000, but I replicated its

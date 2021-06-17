@@ -1,5 +1,5 @@
 /*
-* Project 1B - CIS 441
+* Project 1B
 * 
 * I'll probably end up adding extra methods to future projects. But I only made changes to main for this one.
 * 

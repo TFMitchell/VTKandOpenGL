@@ -1,5 +1,5 @@
 /*
-* CIS 441 Project 1C.
+* Project 1C.
 * 
 * My version of Visual Studio won't let me use a C++ compiler version prior to 2014, so I'll do my best to avoid using newer syntax that doesn't work with your compiler.
 * 

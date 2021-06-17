@@ -1,5 +1,5 @@
 /*
-* Project 2B - CIS 441
+* Project 2B
 * 
 * 
 * Thomas Mitchell
