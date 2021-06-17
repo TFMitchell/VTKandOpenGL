@@ -1,2 +1,1 @@
-# CIS 441
- UO Spring 2021
+# Classwork for Computer Graphics Class
